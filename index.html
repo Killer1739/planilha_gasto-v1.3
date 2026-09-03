@@ -175,7 +175,7 @@
             </div>
         </section>
 
-        <!-- 1. LANÇAMENTOS (Com Seletor Despesas / Ganhos) -->
+        <!-- 1. LANÇAMENTOS (Com Seletor Despesas / Ganhos e Hora Automática) -->
         <section class="glass-effect rounded-2xl shadow-sm p-4 sm:p-6">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
@@ -195,7 +195,7 @@
                     <div class="sm:col-span-3">
                         <input type="text" id="descInput" required placeholder="Ex: Supermercado" class="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
                     </div>
-                    <div class="sm:col-span-3">
+                    <div class="sm:col-span-2">
                         <div class="flex gap-2">
                             <select id="categoryInput" required class="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
                                 <option value="" disabled selected>Categoria...</option>
@@ -213,7 +213,10 @@
                             <option value="Dinheiro">Dinheiro</option>
                         </select>
                     </div>
-                    <div class="sm:col-span-3" id="valWrapper">
+                    <div class="sm:col-span-2">
+                        <input type="time" step="1" id="timeInput" required title="Horário do Lançamento" class="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white cursor-pointer">
+                    </div>
+                    <div class="sm:col-span-2">
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
                                 <span class="text-slate-500 text-xs">R$</span>
@@ -398,6 +401,10 @@
                     </select>
                 </div>
                 <div>
+                    <label class="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Horário</label>
+                    <input type="time" step="1" id="editTimeInput" required class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
+                </div>
+                <div>
                     <label class="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Valor (R$)</label>
                     <input type="number" id="editValInput" required min="0.01" step="0.01" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
                 </div>
@@ -451,6 +458,7 @@
     <script>
         let currentMonth = new Date().toISOString().slice(0, 7);
         let activeTab = 'expense';
+        let isTimeInputFocused = false;
         let dbData = JSON.parse(localStorage.getItem('findash_db')) || {
             categories: {
                 'Moradia': 'needs', 'Alimentação': 'needs', 'Transporte': 'needs',
@@ -471,6 +479,7 @@
         const totalAccountBalanceDisplay = document.getElementById('totalAccountBalanceDisplay');
         const expensesList = document.getElementById('expensesList');
         const addExpenseForm = document.getElementById('addExpenseForm');
+        const timeInput = document.getElementById('timeInput');
         const emptyStateMsg = document.getElementById('emptyStateMsg');
         
         const totalExpensesDisplay = document.getElementById('totalExpensesDisplay');
@@ -552,6 +561,17 @@
         function init() {
             currentMonthInput.value = currentMonth;
             ensureMonthExists(currentMonth);
+
+            // Relógio automático ao vivo no campo de horário
+            timeInput.addEventListener('focus', () => { isTimeInputFocused = true; });
+            timeInput.addEventListener('blur', () => { if(!timeInput.value) isTimeInputFocused = false; });
+
+            setInterval(() => {
+                if (!isTimeInputFocused) {
+                    const now = new Date();
+                    timeInput.value = now.toTimeString().slice(0, 8);
+                }
+            }, 1000);
 
             currentMonthInput.addEventListener('change', (e) => {
                 currentMonth = e.target.value;
@@ -739,6 +759,7 @@
             const desc = document.getElementById('descInput').value.trim();
             const cat = document.getElementById('categoryInput').value;
             const paymentMethod = document.getElementById('paymentMethodInput').value;
+            const timeVal = document.getElementById('timeInput').value || new Date().toTimeString().slice(0, 8);
             const val = parseFloat(document.getElementById('valInput').value);
             const recurrent = document.getElementById('recurrentCheck').checked;
 
@@ -750,6 +771,7 @@
                 description: desc,
                 category: cat,
                 paymentMethod: paymentMethod,
+                time: timeVal,
                 value: val,
                 type: dbData.categories[cat] || 'wants',
                 recurrent: recurrent,
@@ -760,45 +782,16 @@
             dbData.months[currentMonth].expenses.push(expense);
             saveDB();
             
-            let pool = [];
-            if (val <= 50) {
-                pool = [
-                    "Micro-gasto registrado. De grão em grão... olho vivo no caixa! 🐜",
-                    "Uma pequena saída. Gota d'água ou custo necessário? 💧",
-                    "Valor leve, mas cada centavo conta na hora de somar o mês. 🪙",
-                    "Beliscada no saldo. Cuidado com o efeito formiguinha! 🐜",
-                    "Pequena despesa computada. Mantendo o radar ligado. 📡"
-                ];
-            } else if (val <= 200) {
-                pool = [
-                    "Despesa moderada na área. Investimento em bem-estar ou impulso? 🤔",
-                    "Mais um valor computado. O painel segue firme, mas atenção aos detalhes. 📊",
-                    "Custo médio registrado. Cada decisão molda o saldo final do mês. ⚖️",
-                    "Gasto intermediário na balança. Valeu a pena? ⚖️",
-                    "Valor moderado lançado. Olho no planejamento para não apertar o passo. 👟"
-                ];
-            } else if (val <= 800) {
-                pool = [
-                    "Valor de impacto intermediário. Essa compra estava no planejamento? 🧭",
-                    "Atenção ao ponteiro: essa despesa mexe de verdade com a margem do mês. ⚠️",
-                    "Saída expressiva de caixa. Valeu cada centavo para o seu objetivo? 🎯",
-                    "Impacto considerável no mês. Hora de calibrar o leme! ⚓",
-                    "Despesa de peso médio. O painel sentiu, mas segue sob controle. 🛡️"
-                ];
-            } else {
-                pool = [
-                    "Alerta de peso no caixa! Custos altos exigem o dobro de foco nas entradas. 🛠️",
-                    "Movimentação pesada registrada. Hora de acelerar as vendas para equilibrar o jogo! ⚡",
-                    "Saída de grande porte. É hora de repensar as próximas curvas da pista. 🏎️",
-                    "Investimento ou rombo? Valor pesado computado, mantenha a rota firme! 🧭",
-                    "Custo de alto impacto detectado. O motor rugiu alto, agora é compensar no faturamento! 🚀"
-                ];
-            }
-            const randomExpPhrase = pool[Math.floor(Math.random() * pool.length)];
-            showNotification('expense', `Despesa: -${formatCurrency(val)}`, randomExpPhrase);
+            let pool = [
+                "Despesa computada no painel. Olho vivo no caixa! 📊",
+                "Saída de caixa registrada com sucesso. 🛡️",
+                "Mais um lançamento na conta. Mantendo o ritmo! ⚡"
+            ];
+            showNotification('expense', `Despesa: -${formatCurrency(val)}`, pool[Math.floor(Math.random() * pool.length)]);
 
             document.getElementById('descInput').value = '';
             document.getElementById('valInput').value = '';
+            isTimeInputFocused = false;
             document.getElementById('descInput').focus();
             updateDashboard();
         }
@@ -806,6 +799,7 @@
         function addGain() {
             const desc = document.getElementById('descInput').value.trim();
             const cat = document.getElementById('categoryInput').value;
+            const timeVal = document.getElementById('timeInput').value || new Date().toTimeString().slice(0, 8);
             const val = parseFloat(document.getElementById('valInput').value);
 
             if (!desc || !cat || isNaN(val) || val <= 0) return;
@@ -815,6 +809,7 @@
                 typeItem: 'gain',
                 description: desc,
                 category: cat,
+                time: timeVal,
                 value: val,
                 date: `${currentMonth}-${String(new Date().getDate()).padStart(2, '0')}`,
                 createdAt: Date.now()
@@ -823,18 +818,11 @@
             dbData.months[currentMonth].gains.push(gain);
             saveDB();
             
-            const gainPhrases = [
-                "Mais um resultado para a conta! O motor tá girando forte. 🚀",
-                "Dinheiro no caixa é combustível para o próximo objetivo! 🎯",
-                "Faturamento somado. Rumo ao topo, meu sócio! 💰",
-                "Entrada registrada com sucesso. O negócio está escalando! 📈",
-                "Mais faturamento computado. Mantendo o ritmo de crescimento! ⚡"
-            ];
-            const randomGainPhrase = gainPhrases[Math.floor(Math.random() * gainPhrases.length)];
-            showNotification('gain', `Ganho: +${formatCurrency(val)}`, randomGainPhrase);
+            showNotification('gain', `Ganho: +${formatCurrency(val)}`, "Mais um resultado para a conta! O motor tá girando forte. 🚀");
 
             document.getElementById('descInput').value = '';
             document.getElementById('valInput').value = '';
+            isTimeInputFocused = false;
             document.getElementById('descInput').focus();
             updateDashboard();
         }
@@ -862,6 +850,7 @@
             document.getElementById('editTypeInput').value = item.typeItem || 'expense';
             document.getElementById('editDescInput').value = item.description;
             document.getElementById('editValInput').value = item.value;
+            document.getElementById('editTimeInput').value = item.time || '00:00:00';
 
             const editCat = document.getElementById('editCategoryInput');
             if (item.typeItem === 'gain') {
@@ -949,7 +938,8 @@
                 let iconClass = 'fa-arrow-trend-up text-emerald-500';
                 let valColor = 'text-emerald-600 dark:text-emerald-400';
                 let sign = '+ ';
-                let subtitle = `${item.category} (Ganho)`;
+                let timeStr = item.time ? ` • 🕒 ${item.time.slice(0, 5)}` : '';
+                let subtitle = `${item.category} (Ganho)${timeStr}`;
 
                 if (item.typeItem === 'expense') {
                     sign = '- ';
@@ -957,7 +947,7 @@
                     iconClass = 'fa-house text-blue-500';
                     if(item.type === 'wants') iconClass = 'fa-martini-glass-citrus text-amber-500';
                     if(item.type === 'savings') iconClass = 'fa-credit-card text-emerald-500';
-                    subtitle = `${item.category} • <span class="font-medium text-slate-600 dark:text-slate-300">${item.paymentMethod || 'Pix'}</span>`;
+                    subtitle = `${item.category} • <span class="font-medium text-slate-600 dark:text-slate-300">${item.paymentMethod || 'Pix'}</span>${timeStr}`;
                 }
 
                 li.innerHTML = `
@@ -1308,6 +1298,7 @@
                 const typeItem = document.getElementById('editTypeInput').value;
                 const desc = document.getElementById('editDescInput').value.trim();
                 const cat = document.getElementById('editCategoryInput').value;
+                const timeVal = document.getElementById('editTimeInput').value;
                 const val = parseFloat(document.getElementById('editValInput').value);
 
                 const m = dbData.months[currentMonth];
@@ -1315,7 +1306,7 @@
                     const list = m.gains || [];
                     const index = list.findIndex(g => g.id === id);
                     if (index !== -1 && desc && cat && !isNaN(val)) {
-                        list[index] = { ...list[index], description: desc, category: cat, value: val };
+                        list[index] = { ...list[index], description: desc, category: cat, time: timeVal, value: val };
                         saveDB();
                         editModal.classList.add('hidden');
                         updateDashboard();
@@ -1331,6 +1322,7 @@
                             description: desc,
                             category: cat,
                             paymentMethod: paymentMethod,
+                            time: timeVal,
                             value: val,
                             type: dbData.categories[cat] || 'wants',
                             recurrent: recurrent
