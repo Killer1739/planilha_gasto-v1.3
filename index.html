@@ -481,32 +481,34 @@
         const formatCurrency = (val) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
         const generateId = () => Math.random().toString(36).substr(2, 9);
 
-        // Sistema de Notificações Centralizadas com Atraso e Visual Viewport API
+        // Sistema de Notificações Neon com Visual Viewport API e Atraso Mobile
         function showNotification(type, title, message) {
             setTimeout(() => {
                 const toast = document.createElement('div');
                 const isGain = type === 'gain';
-                const bgColor = isGain 
-                    ? 'bg-emerald-900/95 text-emerald-100 border-emerald-500/50 shadow-emerald-900/30' 
-                    : 'bg-rose-900/95 text-rose-100 border-rose-500/50 shadow-rose-900/30';
                 
-                toast.className = `fixed z-[300] flex items-start gap-3 px-4 py-3 rounded-2xl shadow-2xl border backdrop-blur-md transition-all duration-300 transform -translate-x-1/2 -translate-y-1/2 scale-95 opacity-0 max-w-sm w-[90%] sm:w-full ${bgColor}`;
+                // Estilo Neon Verde para Ganhos e Neon Vermelho para Despesas
+                const neonStyle = isGain 
+                    ? 'bg-emerald-950 text-emerald-100 border-2 border-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.8)]' 
+                    : 'bg-rose-950 text-rose-100 border-2 border-rose-400 shadow-[0_0_20px_rgba(251,113,133,0.8)]';
+                
+                toast.className = `fixed z-[300] flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl backdrop-blur-md transition-all duration-300 transform -translate-x-1/2 -translate-y-1/2 scale-95 opacity-0 max-w-[270px] sm:max-w-xs w-[85%] ${neonStyle}`;
                 
                 const iconHtml = isGain 
-                    ? `<div class="text-2xl animate-bounce">✅</div>` 
-                    : `<div class="text-2xl animate-pulse">⛔️</div>`;
+                    ? `<div class="text-xl animate-bounce">✅</div>` 
+                    : `<div class="text-xl animate-pulse">⛔️</div>`;
                     
                 toast.innerHTML = `
-                    <div class="shrink-0 pt-0.5">${iconHtml}</div>
+                    <div class="shrink-0">${iconHtml}</div>
                     <div class="flex-grow overflow-hidden">
-                        <h4 class="font-bold text-xs uppercase tracking-wider opacity-90">${title}</h4>
-                        <p class="text-xs mt-0.5 leading-relaxed font-medium">${message}</p>
+                        <h4 class="font-bold text-[11px] uppercase tracking-wider opacity-95">${title}</h4>
+                        <p class="text-[11px] mt-0.5 leading-snug font-medium opacity-90">${message}</p>
                     </div>
                 `;
                 
                 document.body.appendChild(toast);
                 
-                // Ancoragem exata no centro da tela ampliada (Visual Viewport)
+                // Ancoragem exata no centro da tela ampliada pelo zoom mobile (Visual Viewport)
                 if (window.visualViewport) {
                     const vv = window.visualViewport;
                     const centerX = vv.offsetLeft + (vv.width / 2);
@@ -530,7 +532,7 @@
                     setTimeout(() => toast.remove(), 300);
                 }, 3500);
 
-            }, 250); // Atraso estratégico para o zoom e scroll estabilizarem no mobile
+            }, 250); // Atraso estratégico para aguardar o zoom e rolagem nativa do mobile
         }
 
         function init() {
