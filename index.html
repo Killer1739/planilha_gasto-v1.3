@@ -96,20 +96,18 @@
 
     <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 mt-6 space-y-4">
         
-        <!-- Bloco de Renda com Múltiplas Fontes -->
+        <!-- Bloco de Renda com Botão Lápis à Esquerda -->
         <section class="glass-effect rounded-2xl shadow-sm p-4 sm:p-6">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <div>
                     <h2 class="text-base sm:text-lg font-semibold text-slate-700 dark:text-slate-200">Renda Mensal Líquida Total</h2>
-                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400" id="incomeSubtitle">Gerencie suas fontes de entrada do mês</p>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Gerencie suas fontes de entrada do mês</p>
                 </div>
-                <div class="flex items-center gap-3 w-full sm:w-auto">
+                <div class="flex items-center gap-2.5 w-full sm:w-auto">
+                    <button id="manageIncomesBtn" class="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 text-indigo-600 dark:text-indigo-400 transition text-sm border border-indigo-200 dark:border-indigo-800" title="Editar Valor da Renda">✏️</button>
                     <div class="text-left sm:text-right flex-grow sm:flex-grow-0">
                         <span class="text-xl sm:text-2xl font-bold text-emerald-600 dark:text-emerald-400" id="totalIncomeDisplay">R$ 0,00</span>
                     </div>
-                    <button id="manageIncomesBtn" class="px-3 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl transition text-xs sm:text-sm font-medium flex items-center gap-1.5 shadow-sm shrink-0">
-                        <i class="fa-solid fa-wallet"></i> Entradas
-                    </button>
                 </div>
             </div>
         </section>
@@ -161,7 +159,7 @@
             </div>
         </section>
 
-        <!-- 1. LANÇAMENTOS (Com Forma de Pagamento) -->
+        <!-- 1. LANÇAMENTOS -->
         <section class="glass-effect rounded-2xl shadow-sm p-4 sm:p-6">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
@@ -311,7 +309,7 @@
             </section>
         </div>
 
-        <!-- Insights & Alertas Inteligentes Dinâmicos -->
+        <!-- Alertas Inteligentes -->
         <section class="glass-effect rounded-2xl shadow-sm p-4 sm:p-6">
             <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white mb-1 flex items-center gap-2">
                 <i class="fa-solid fa-lightbulb text-amber-400"></i> Alertas Inteligentes & Insights
@@ -322,7 +320,7 @@
 
     </main>
 
-    <!-- Modal Gerenciar Entradas (Múltiplas Rendas) -->
+    <!-- Modal Gerenciar Entradas (Vendas e Ganho Extra) -->
     <div id="incomeModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] hidden flex justify-center items-center opacity-0 transition-opacity duration-300 p-4">
         <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md p-5 sm:p-6 transform scale-95 transition-transform duration-300">
             <div class="flex justify-between items-center mb-4">
@@ -334,7 +332,11 @@
             <form id="addIncomeForm" class="space-y-3 mb-4 bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
                 <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
                     <div class="sm:col-span-6">
-                        <input type="text" id="incDescInput" required placeholder="Ex: Salário, Freelance" class="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
+                        <select id="incDescInput" required class="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
+                            <option value="" disabled selected>Categoria...</option>
+                            <option value="Vendas">Vendas</option>
+                            <option value="Ganho Extra">Ganho Extra</option>
+                        </select>
                     </div>
                     <div class="sm:col-span-4">
                         <input type="number" id="incValInput" required min="0.01" step="0.01" placeholder="R$ 0,00" class="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
@@ -542,7 +544,7 @@
 
         function ensureMonthExists(monthStr) {
             if (!dbData.months[monthStr]) {
-                let defaultIncomes = [{ id: generateId(), description: 'Salário Principal', value: 5000 }];
+                let defaultIncomes = [{ id: generateId(), description: 'Vendas', value: 5000 }];
                 let recurrentExpenses = [];
 
                 const sortedMonths = Object.keys(dbData.months).sort();
@@ -562,10 +564,9 @@
                 };
                 saveDB();
             } else {
-                // Compatibilidade com estrutura antiga caso exista
                 const m = dbData.months[monthStr];
                 if (!m.incomes) {
-                    m.incomes = [{ id: generateId(), description: 'Renda Principal', value: m.income || 5000 }];
+                    m.incomes = [{ id: generateId(), description: 'Vendas', value: m.income || 5000 }];
                     delete m.income;
                     saveDB();
                 }
@@ -608,7 +609,7 @@
         }
 
         function addIncomeSource() {
-            const desc = document.getElementById('incDescInput').value.trim();
+            const desc = document.getElementById('incDescInput').value;
             const val = parseFloat(document.getElementById('incValInput').value);
             if (!desc || isNaN(val) || val <= 0) return;
 
