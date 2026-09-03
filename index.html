@@ -152,6 +152,31 @@
             </div>
         </section>
 
+        <!-- Seção de Gráficos de Rosca Lado a Lado -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Gráfico 1: Gastos por Categoria -->
+            <div class="glass-effect rounded-2xl shadow-sm p-6">
+                <h2 class="text-lg font-bold text-slate-800 dark:text-white mb-4">Distribuição por Categoria</h2>
+                <div class="relative h-56 w-full flex justify-center items-center">
+                    <canvas id="categoryChart"></canvas>
+                    <div id="chartEmptyState" class="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-slate-900/80 rounded-xl backdrop-blur-sm transition-opacity duration-300">
+                        <p class="text-sm text-slate-500 dark:text-slate-400 text-center">Adicione gastos para<br>ver o gráfico</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráfico 2: Focado na Sobra Mensal / Poupança -->
+            <div class="glass-effect rounded-2xl shadow-sm p-6">
+                <h2 class="text-lg font-bold text-slate-800 dark:text-white mb-4">Composição da Sobra (Poupança)</h2>
+                <div class="relative h-56 w-full flex justify-center items-center">
+                    <canvas id="savingsChart"></canvas>
+                    <div id="savingsChartEmptyState" class="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-slate-900/80 rounded-xl backdrop-blur-sm transition-opacity duration-300">
+                        <p class="text-sm text-slate-500 dark:text-slate-400 text-center">Adicione ganhos e gastos para<br>ver a composição da sobra</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
             <section class="lg:col-span-2 space-y-6">
@@ -210,17 +235,7 @@
             </section>
 
             <section class="space-y-6">
-                
-                <div class="glass-effect rounded-2xl shadow-sm p-6">
-                    <h2 class="text-lg font-bold text-slate-800 dark:text-white mb-4">Distribuição por Categoria</h2>
-                    <div class="relative h-56 w-full flex justify-center items-center">
-                        <canvas id="categoryChart"></canvas>
-                        <div id="chartEmptyState" class="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-slate-900/80 rounded-xl backdrop-blur-sm transition-opacity duration-300">
-                            <p class="text-sm text-slate-500 dark:text-slate-400 text-center">Adicione gastos para<br>ver o gráfico</p>
-                        </div>
-                    </div>
-                </div>
-
+                <!-- Análise 50/30/20 -->
                 <div class="glass-effect rounded-2xl shadow-sm p-6">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-lg font-bold text-slate-800 dark:text-white">Análise 50/30/20</h2>
@@ -376,8 +391,10 @@
         };
 
         let chartInstance = null;
+        let savingsChartInstance = null;
         let timelineChartInstance = null;
         const colors = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899', '#f97316'];
+        const savingsColors = ['#10b981', '#06b6d4', '#8b5cf6', '#3b82f6'];
 
         const currentMonthInput = document.getElementById('currentMonthInput');
         const incomeInput = document.getElementById('incomeInput');
@@ -566,6 +583,7 @@
             updateKPIs(stats);
             update503020(stats);
             updateChart(stats.byCategory);
+            updateSavingsChart(stats);
             updateTimelineChart(dbData.months[currentMonth].expenses);
             generateRecommendations(stats);
         }
@@ -705,6 +723,47 @@
                 chartInstance = new Chart(ctx, {
                     type: 'doughnut',
                     data: { labels, datasets: [{ data, backgroundColor: colors, borderWidth: 0 }] },
+                    options: {
+                        responsive: true, maintainAspectRatio: false, cutout: '65%',
+                        plugins: { legend: { position: 'right', labels: { color: textColor, font: { size: 11 }, usePointStyle: true } } }
+                    }
+                });
+            }
+        }
+
+        function updateSavingsChart(stats) {
+            const ctx = document.getElementById('savingsChart').getContext('2d');
+            const emptyState = document.getElementById('savingsChartEmptyState');
+            
+            // Vamos decompor a renda ou a sobra em alocações (Ex: Reserva, Investimentos, Caixa Livre, etc.)
+            let savingsLabels = ['Sobra Livre', 'Meta Investimentos (20%)'];
+            let savingsData = [Math.max(stats.remaining, 0), Math.max(stats.income * 0.2, 0)];
+
+            if (stats.income <= 0 && stats.total <= 0) {
+                emptyState.style.opacity = '1';
+                if (savingsChartInstance) { savingsChartInstance.destroy(); savingsChartInstance = null; }
+                return;
+            }
+            emptyState.style.opacity = '0';
+
+            const isDark = document.body.classList.contains('dark-mode');
+            const textColor = isDark ? '#cbd5e1' : '#475569';
+
+            if (savingsChartInstance) {
+                savingsChartInstance.data.labels = savingsLabels;
+                savingsChartInstance.data.datasets[0].data = savingsData;
+                savingsChartInstance.update();
+            } else {
+                savingsChartInstance = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: savingsLabels,
+                        datasets: [{
+                            data: savingsData,
+                            backgroundColor: savingsColors,
+                            borderWidth: 0
+                        }]
+                    },
                     options: {
                         responsive: true, maintainAspectRatio: false, cutout: '65%',
                         plugins: { legend: { position: 'right', labels: { color: textColor, font: { size: 11 }, usePointStyle: true } } }
