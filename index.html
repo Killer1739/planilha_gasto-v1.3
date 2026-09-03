@@ -153,7 +153,7 @@
             </div>
         </section>
 
-        <!-- 1. LANÇAMENTOS (Movidos para ACIMA dos gráficos) -->
+        <!-- 1. LANÇAMENTOS -->
         <section class="glass-effect rounded-2xl shadow-sm p-4 sm:p-6">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
@@ -207,7 +207,7 @@
             </div>
         </section>
 
-        <!-- 2. GRÁFICOS DE ROSCA LADO A LADO (Mesmo no Celular) -->
+        <!-- 2. GRÁFICOS DE ROSCA LADO A LADO -->
         <section class="grid grid-cols-2 gap-3 sm:gap-6">
             <div class="glass-effect rounded-2xl shadow-sm p-3 sm:p-6">
                 <h2 class="text-xs sm:text-lg font-bold text-slate-800 dark:text-white mb-2 truncate">Gastos por Categoria</h2>
@@ -388,7 +388,7 @@
         let savingsChartInstance = null;
         let timelineChartInstance = null;
         const colors = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899', '#f97316'];
-        const savingsColors = ['#10b981', '#06b6d4', '#8b5cf6', '#3b82f6'];
+        const savingsColors = ['#3b82f6', '#10b981']; // Azul para Gastos Totais, Verde para Sobra Livre
 
         const currentMonthInput = document.getElementById('currentMonthInput');
         const incomeInput = document.getElementById('incomeInput');
@@ -729,8 +729,9 @@
             const ctx = document.getElementById('savingsChart').getContext('2d');
             const emptyState = document.getElementById('savingsChartEmptyState');
             
-            let savingsLabels = ['Sobra Livre', 'Meta Invest.'];
-            let savingsData = [Math.max(stats.remaining, 0), Math.max(stats.income * 0.2, 0)];
+            // Fatia azul: Gastos Totais | Fatia verde: Sobra Livre Restante
+            let savingsLabels = ['Gastos Totais', 'Sobra Livre'];
+            let savingsData = [Math.max(stats.total, 0), Math.max(stats.remaining, 0)];
 
             if (stats.income <= 0 && stats.total <= 0) {
                 emptyState.style.opacity = '1';
