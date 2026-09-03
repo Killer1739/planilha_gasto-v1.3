@@ -598,7 +598,7 @@
                     
                     recurrentExpenses = (dbData.months[lastMonth].expenses || [])
                         .filter(exp => exp.recurrent)
-                        .map(exp => ({ ...exp, id: generateId(), date: `${monthStr}-01` }));
+                        .map(exp => ({ ...exp, id: generateId(), date: `${monthStr}-01`, createdAt: Date.now() }));
                 }
 
                 dbData.months[monthStr] = {
@@ -704,7 +704,8 @@
                 value: val,
                 type: dbData.categories[cat] || 'wants',
                 recurrent: recurrent,
-                date: `${currentMonth}-${String(new Date().getDate()).padStart(2, '0')}`
+                date: `${currentMonth}-${String(new Date().getDate()).padStart(2, '0')}`,
+                createdAt: Date.now()
             };
 
             dbData.months[currentMonth].expenses.push(expense);
@@ -766,7 +767,8 @@
                 description: desc,
                 category: cat,
                 value: val,
-                date: `${currentMonth}-${String(new Date().getDate()).padStart(2, '0')}`
+                date: `${currentMonth}-${String(new Date().getDate()).padStart(2, '0')}`,
+                createdAt: Date.now()
             };
 
             dbData.months[currentMonth].gains.push(gain);
@@ -874,10 +876,11 @@
 
         function renderTransactionsList() {
             const m = dbData.months[currentMonth];
-            const expenses = (m.expenses || []).map(e => ({ ...e, typeItem: 'expense' }));
-            const gains = (m.gains || []).map(g => ({ ...g, typeItem: 'gain' }));
+            const expenses = (m.expenses || []).map(e => ({ ...e, typeItem: 'expense', createdAt: e.createdAt || 0 }));
+            const gains = (m.gains || []).map(g => ({ ...g, typeItem: 'gain', createdAt: g.createdAt || 0 }));
             
-            const allItems = [...expenses, ...gains].reverse();
+            // Mistura despesas e ganhos e ordena pelo mais recente (maior createdAt) no topo
+            const allItems = [...expenses, ...gains].sort((a, b) => b.createdAt - a.createdAt);
 
             document.getElementById('totalItemsCount').textContent = `${allItems.length} item${allItems.length !== 1 ? 's' : ''}`;
             
