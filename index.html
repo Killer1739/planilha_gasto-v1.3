@@ -112,6 +112,22 @@
             </div>
         </section>
 
+        <!-- Bloco de Saldo Atual em Conta -->
+        <section class="glass-effect rounded-2xl shadow-sm p-3 sm:p-4">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                <div>
+                    <h3 class="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300">Saldo Atual em Conta</h3>
+                    <p class="text-[10px] sm:text-xs text-slate-400">Dinheiro disponível no momento (atualiza com ganhos e gastos)</p>
+                </div>
+                <div class="flex items-center gap-2.5 w-full sm:w-auto">
+                    <button id="editAccountBalanceBtn" class="p-1.5 rounded-lg bg-cyan-50 dark:bg-cyan-950/40 hover:bg-cyan-100 text-cyan-600 dark:text-cyan-400 transition text-xs border border-cyan-200 dark:border-cyan-800" title="Editar Saldo em Conta">✏️</button>
+                    <div class="text-left sm:text-right flex-grow sm:flex-grow-0">
+                        <span class="text-lg sm:text-xl font-bold text-cyan-600 dark:text-cyan-400" id="totalAccountBalanceDisplay">R$ 0,00</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- KPI Cards Lado a Lado -->
         <section class="grid grid-cols-3 gap-2 sm:gap-4">
             <div class="glass-effect rounded-2xl shadow-sm p-3 sm:p-5 flex flex-col justify-between border-l-4 border-rose-500">
@@ -328,7 +344,7 @@
 
     <!-- Modal Histórico Comparativo -->
     <div id="historyModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] hidden flex justify-center items-center opacity-0 transition-opacity duration-300 p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-lg p-5 sm:p-6 transform scale-95 transition-transform duration-300">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-2xl p-5 sm:p-6 transform scale-95 transition-transform duration-300">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
                     <i class="fa-solid fa-chart-column text-indigo-500"></i> Histórico Comparativo
@@ -343,6 +359,7 @@
                             <th class="py-2 px-2">Renda</th>
                             <th class="py-2 px-2">Gastos</th>
                             <th class="py-2 px-2">Sobra</th>
+                            <th class="py-2 px-2">Saldo em Conta</th>
                         </tr>
                     </thead>
                     <tbody id="historyTableBody">
@@ -451,6 +468,7 @@
 
         const currentMonthInput = document.getElementById('currentMonthInput');
         const totalIncomeDisplay = document.getElementById('totalIncomeDisplay');
+        const totalAccountBalanceDisplay = document.getElementById('totalAccountBalanceDisplay');
         const expensesList = document.getElementById('expensesList');
         const addExpenseForm = document.getElementById('addExpenseForm');
         const emptyStateMsg = document.getElementById('emptyStateMsg');
@@ -544,6 +562,7 @@
             document.getElementById('prevMonthBtn').addEventListener('click', () => changeMonthOffset(-1));
             document.getElementById('nextMonthBtn').addEventListener('click', () => changeMonthOffset(1));
             document.getElementById('editIncomeBtn').addEventListener('click', editTotalIncome);
+            document.getElementById('editAccountBalanceBtn').addEventListener('click', editAccountBalance);
 
             const tabExpense = document.getElementById('tabExpense');
             const tabGain = document.getElementById('tabGain');
@@ -588,6 +607,7 @@
         function ensureMonthExists(monthStr) {
             if (!dbData.months[monthStr]) {
                 let defaultIncome = 5000;
+                let defaultAccountBalance = 2000;
                 let recurrentExpenses = [];
                 let recurrentGains = [];
 
@@ -595,6 +615,7 @@
                 if (sortedMonths.length > 0) {
                     const lastMonth = sortedMonths[sortedMonths.length - 1];
                     defaultIncome = dbData.months[lastMonth].income || 5000;
+                    defaultAccountBalance = getMonthFinalAccountBalance(lastMonth);
                     
                     recurrentExpenses = (dbData.months[lastMonth].expenses || [])
                         .filter(exp => exp.recurrent)
@@ -603,6 +624,7 @@
 
                 dbData.months[monthStr] = {
                     income: defaultIncome,
+                    accountBalance: defaultAccountBalance,
                     expenses: recurrentExpenses,
                     gains: recurrentGains
                 };
@@ -611,10 +633,22 @@
                 if (dbData.months[monthStr].income === undefined) {
                     dbData.months[monthStr].income = 5000;
                 }
+                if (dbData.months[monthStr].accountBalance === undefined) {
+                    dbData.months[monthStr].accountBalance = 2000;
+                }
                 if (!dbData.months[monthStr].gains) {
                     dbData.months[monthStr].gains = [];
                 }
             }
+        }
+
+        function getMonthFinalAccountBalance(monthStr) {
+            const m = dbData.months[monthStr];
+            if (!m) return 0;
+            const base = m.accountBalance !== undefined ? m.accountBalance : 2000;
+            const totalGains = (m.gains || []).reduce((acc, curr) => acc + curr.value, 0);
+            const totalExpenses = (m.expenses || []).reduce((acc, curr) => acc + curr.value, 0);
+            return base + totalGains - totalExpenses;
         }
 
         function changeMonthOffset(offset) {
@@ -639,6 +673,21 @@
                 const parsed = parseFloat(newval);
                 if (!isNaN(parsed) && parsed >= 0) {
                     dbData.months[currentMonth].income = parsed;
+                    saveDB();
+                    updateDashboard();
+                } else {
+                    alert("Valor inválido.");
+                }
+            }
+        }
+
+        function editAccountBalance() {
+            const currentBal = dbData.months[currentMonth].accountBalance || 0;
+            const newval = prompt("Informe o saldo atual em conta:", currentBal);
+            if (newval !== null) {
+                const parsed = parseFloat(newval);
+                if (!isNaN(parsed)) {
+                    dbData.months[currentMonth].accountBalance = parsed;
                     saveDB();
                     updateDashboard();
                 } else {
@@ -870,8 +919,9 @@
 
             const remaining = income - total;
             const actualSavings = remaining + debtTotal;
+            const currentAccountBalance = getMonthFinalAccountBalance(currentMonth);
 
-            return { total, remaining, actualSavings, needsTotal, wantsTotal, byCategory, income };
+            return { total, remaining, actualSavings, needsTotal, wantsTotal, byCategory, income, currentAccountBalance };
         }
 
         function renderTransactionsList() {
@@ -879,7 +929,6 @@
             const expenses = (m.expenses || []).map(e => ({ ...e, typeItem: 'expense', createdAt: e.createdAt || 0 }));
             const gains = (m.gains || []).map(g => ({ ...g, typeItem: 'gain', createdAt: g.createdAt || 0 }));
             
-            // Mistura despesas e ganhos e ordena pelo mais recente (maior createdAt) no topo
             const allItems = [...expenses, ...gains].sort((a, b) => b.createdAt - a.createdAt);
 
             document.getElementById('totalItemsCount').textContent = `${allItems.length} item${allItems.length !== 1 ? 's' : ''}`;
@@ -938,6 +987,7 @@
 
         function updateKPIs(stats) {
             totalIncomeDisplay.textContent = formatCurrency(stats.income);
+            totalAccountBalanceDisplay.textContent = formatCurrency(stats.currentAccountBalance);
             totalExpensesDisplay.textContent = formatCurrency(stats.total);
             remainingBalanceDisplay.textContent = formatCurrency(stats.remaining);
             
@@ -1155,7 +1205,7 @@
 
             const sortedMonths = Object.keys(dbData.months).sort().reverse();
             if (sortedMonths.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-slate-400">Nenhum dado histórico registrado.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-slate-400">Nenhum dado histórico registrado.</td></tr>`;
                 return;
             }
 
@@ -1164,6 +1214,7 @@
                 const mData = dbData.months[mStr];
                 const exp = (mData.expenses || []).reduce((a, b) => a + b.value, 0);
                 const rem = inc - exp;
+                const accBal = getMonthFinalAccountBalance(mStr);
 
                 const [year, month] = mStr.split('-');
                 const monthName = new Date(year, month - 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
@@ -1175,6 +1226,7 @@
                     <td class="py-2.5 px-2 text-emerald-600 font-semibold">${formatCurrency(inc)}</td>
                     <td class="py-2.5 px-2 text-rose-500 font-semibold">${formatCurrency(exp)}</td>
                     <td class="py-2.5 px-2 font-bold ${rem >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-500'}">${formatCurrency(rem)}</td>
+                    <td class="py-2.5 px-2 font-bold text-cyan-600 dark:text-cyan-400">${formatCurrency(accBal)}</td>
                 `;
                 tbody.appendChild(tr);
             });
