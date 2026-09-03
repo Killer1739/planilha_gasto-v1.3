@@ -168,9 +168,9 @@
                 <div class="text-xs sm:text-sm text-slate-500 dark:text-slate-400" id="totalItemsCount">0 itens</div>
             </div>
 
-            <!-- Seletor de Tipo (Despesas / Ganhos) -->
+            <!-- Seletor de Tipo (Despesas / Ganhos) - Aba Despesas em Vermelho -->
             <div class="flex gap-2 mb-3 bg-slate-200 dark:bg-slate-700/60 p-1 rounded-xl w-fit text-xs font-semibold">
-                <button type="button" id="tabExpense" class="px-4 py-1.5 rounded-lg bg-indigo-600 text-white transition shadow-sm">Despesas</button>
+                <button type="button" id="tabExpense" class="px-4 py-1.5 rounded-lg bg-rose-600 text-white transition shadow-sm">Despesas</button>
                 <button type="button" id="tabGain" class="px-4 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 transition">Ganhos</button>
             </div>
 
@@ -550,7 +550,7 @@
 
             tabExpense.addEventListener('click', () => {
                 activeTab = 'expense';
-                tabExpense.className = "px-4 py-1.5 rounded-lg bg-indigo-600 text-white transition shadow-sm";
+                tabExpense.className = "px-4 py-1.5 rounded-lg bg-rose-600 text-white transition shadow-sm";
                 tabGain.className = "px-4 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 transition";
                 document.getElementById('paymentMethodWrapper').style.display = 'block';
                 document.getElementById('recurrentWrapper').style.display = 'flex';
@@ -877,7 +877,6 @@
             const expenses = (m.expenses || []).map(e => ({ ...e, typeItem: 'expense' }));
             const gains = (m.gains || []).map(g => ({ ...g, typeItem: 'gain' }));
             
-            // Invertido: os mais recentes cadastrados agora aparecem sempre no topo da lista
             const allItems = [...expenses, ...gains].reverse();
 
             document.getElementById('totalItemsCount').textContent = `${allItems.length} item${allItems.length !== 1 ? 's' : ''}`;
