@@ -481,13 +481,12 @@
         const formatCurrency = (val) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
         const generateId = () => Math.random().toString(36).substr(2, 9);
 
-        // Sistema de Notificações Neon com Visual Viewport API e Atraso Mobile
+        // Sistema de Notificações Neon com Visual Viewport e deslocamento vertical para cima (~1.5cm)
         function showNotification(type, title, message) {
             setTimeout(() => {
                 const toast = document.createElement('div');
                 const isGain = type === 'gain';
                 
-                // Estilo Neon Verde para Ganhos e Neon Vermelho para Despesas
                 const neonStyle = isGain 
                     ? 'bg-emerald-950 text-emerald-100 border-2 border-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.8)]' 
                     : 'bg-rose-950 text-rose-100 border-2 border-rose-400 shadow-[0_0_20px_rgba(251,113,133,0.8)]';
@@ -508,16 +507,16 @@
                 
                 document.body.appendChild(toast);
                 
-                // Ancoragem exata no centro da tela ampliada pelo zoom mobile (Visual Viewport)
+                // Ancoragem no centro da tela ampliada, deslocada ~55px (aprox. 1,5cm) para cima
                 if (window.visualViewport) {
                     const vv = window.visualViewport;
                     const centerX = vv.offsetLeft + (vv.width / 2);
-                    const centerY = vv.offsetTop + (vv.height / 2);
+                    const centerY = vv.offsetTop + (vv.height / 2) - 55; // Deslocado para cima
                     toast.style.left = `${centerX}px`;
                     toast.style.top = `${centerY}px`;
                 } else {
                     toast.style.left = '50%';
-                    toast.style.top = '50%';
+                    toast.style.top = '38%'; // Fallback levemente acima do meio
                 }
                 
                 // Animação de entrada
@@ -532,7 +531,7 @@
                     setTimeout(() => toast.remove(), 300);
                 }, 3500);
 
-            }, 250); // Atraso estratégico para aguardar o zoom e rolagem nativa do mobile
+            }, 250); // Atraso estratégico para o zoom e scroll estabilizarem no mobile
         }
 
         function init() {
