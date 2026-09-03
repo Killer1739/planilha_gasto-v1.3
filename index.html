@@ -51,6 +51,8 @@
 </head>
 <body class="antialiased min-h-screen pb-10">
 
+    <div id="toastContainer" class="fixed top-4 inset-x-0 z-[200] flex flex-col items-center gap-2 pointer-events-none px-4"></div>
+
     <header class="sticky top-0 z-50 glass-effect shadow-sm">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 flex justify-between items-center gap-2">
             <div class="flex items-center gap-2">
@@ -60,7 +62,6 @@
                 <h1 class="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400">FinDash</h1>
             </div>
 
-            <!-- Mês, Ano e Botão de Histórico Comparativo -->
             <div class="flex items-center gap-1.5">
                 <div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700">
                     <button id="prevMonthBtn" class="p-1.5 hover:bg-white dark:hover:bg-slate-700 rounded-lg transition text-slate-600 dark:text-slate-300">
@@ -96,7 +97,6 @@
 
     <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 mt-6 space-y-4">
         
-        <!-- Bloco de Renda com Botão Lápis Direto -->
         <section class="glass-effect rounded-2xl shadow-sm p-4 sm:p-6">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <div>
@@ -112,7 +112,6 @@
             </div>
         </section>
 
-        <!-- KPI Cards Lado a Lado -->
         <section class="grid grid-cols-3 gap-2 sm:gap-4">
             <div class="glass-effect rounded-2xl shadow-sm p-3 sm:p-5 flex flex-col justify-between border-l-4 border-rose-500">
                 <div class="flex justify-between items-start">
@@ -159,7 +158,6 @@
             </div>
         </section>
 
-        <!-- 1. LANÇAMENTOS (Com Seletor Despesas / Ganhos) -->
         <section class="glass-effect rounded-2xl shadow-sm p-4 sm:p-6">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
@@ -168,7 +166,6 @@
                 <div class="text-xs sm:text-sm text-slate-500 dark:text-slate-400" id="totalItemsCount">0 itens</div>
             </div>
 
-            <!-- Seletor de Tipo (Despesas / Ganhos) -->
             <div class="flex gap-2 mb-3 bg-slate-200 dark:bg-slate-700/60 p-1 rounded-xl w-fit text-xs font-semibold">
                 <button type="button" id="tabExpense" class="px-4 py-1.5 rounded-lg bg-indigo-600 text-white transition shadow-sm">Despesas</button>
                 <button type="button" id="tabGain" class="px-4 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 transition">Ganhos</button>
@@ -227,7 +224,6 @@
             </div>
         </section>
 
-        <!-- 2. GRÁFICOS DE ROSCA LADO A LADO -->
         <section class="grid grid-cols-2 gap-3 sm:gap-6">
             <div class="glass-effect rounded-2xl shadow-sm p-3 sm:p-6">
                 <h2 class="text-xs sm:text-lg font-bold text-slate-800 dark:text-white mb-2 truncate">Gastos por Categoria</h2>
@@ -250,7 +246,6 @@
             </div>
         </section>
 
-        <!-- Análise 50/30/20 & Timeline -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <section class="glass-effect rounded-2xl shadow-sm p-4 sm:p-6">
                 <div class="flex justify-between items-center mb-4">
@@ -315,7 +310,6 @@
             </section>
         </div>
 
-        <!-- Alertas Inteligentes -->
         <section class="glass-effect rounded-2xl shadow-sm p-4 sm:p-6">
             <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white mb-1 flex items-center gap-2">
                 <i class="fa-solid fa-lightbulb text-amber-400"></i> Alertas Inteligentes & Insights
@@ -326,7 +320,6 @@
 
     </main>
 
-    <!-- Modal Histórico Comparativo -->
     <div id="historyModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] hidden flex justify-center items-center opacity-0 transition-opacity duration-300 p-4">
         <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-lg p-5 sm:p-6 transform scale-95 transition-transform duration-300">
             <div class="flex justify-between items-center mb-4">
@@ -346,14 +339,12 @@
                         </tr>
                     </thead>
                     <tbody id="historyTableBody">
-                        <!-- Preenchido via JS -->
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <!-- Modal Editar Lançamento -->
     <div id="editModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] hidden flex justify-center items-center opacity-0 transition-opacity duration-300 p-4">
         <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md p-5 sm:p-6 transform scale-95 transition-transform duration-300">
             <div class="flex justify-between items-center mb-4">
@@ -393,7 +384,6 @@
         </div>
     </div>
 
-    <!-- Modal Categoria -->
     <div id="categoryModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] hidden flex justify-center items-center opacity-0 transition-opacity duration-300 p-4">
         <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md p-5 sm:p-6 transform scale-95 transition-transform duration-300">
             <div class="flex justify-between items-center mb-4">
@@ -418,7 +408,6 @@
         </div>
     </div>
     
-    <!-- Modal Info -->
     <div id="infoModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] hidden flex justify-center items-center opacity-0 transition-opacity duration-300 p-4">
         <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md p-5 sm:p-6 relative">
             <button id="closeInfoBtn" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -433,7 +422,7 @@
 
     <script>
         let currentMonth = new Date().toISOString().slice(0, 7);
-        let activeTab = 'expense'; // 'expense' ou 'gain'
+        let activeTab = 'expense';
         let dbData = JSON.parse(localStorage.getItem('findash_db')) || {
             categories: {
                 'Moradia': 'needs', 'Alimentação': 'needs', 'Transporte': 'needs',
@@ -481,6 +470,42 @@
         const formatCurrency = (val) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
         const generateId = () => Math.random().toString(36).substr(2, 9);
 
+        // Sistema de Notificações Push Estilo iOS com animações
+        function showNotification(type, title, message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            
+            const isGain = type === 'gain';
+            const bgColor = isGain 
+                ? 'bg-emerald-900/95 text-emerald-100 border-emerald-500/50 shadow-emerald-900/30' 
+                : 'bg-rose-900/95 text-rose-100 border-rose-500/50 shadow-rose-900/30';
+            
+            toast.className = `pointer-events-auto flex items-start gap-3 px-4 py-3 rounded-2xl shadow-2xl border backdrop-blur-md transition-all duration-300 transform -translate-y-6 opacity-0 max-w-sm w-full ${bgColor}`;
+            
+            const iconHtml = isGain 
+                ? `<div class="text-2xl animate-bounce">✅</div>` 
+                : `<div class="text-2xl animate-pulse">⛔️</div>`;
+                
+            toast.innerHTML = `
+                <div class="shrink-0 pt-0.5">${iconHtml}</div>
+                <div class="flex-grow overflow-hidden">
+                    <h4 class="font-bold text-xs uppercase tracking-wider opacity-90">${title}</h4>
+                    <p class="text-xs mt-0.5 leading-relaxed font-medium">${message}</p>
+                </div>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.remove('-translate-y-6', 'opacity-0');
+            }, 10);
+            
+            setTimeout(() => {
+                toast.classList.add('-translate-y-6', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
         function init() {
             currentMonthInput.value = currentMonth;
             ensureMonthExists(currentMonth);
@@ -493,10 +518,8 @@
 
             document.getElementById('prevMonthBtn').addEventListener('click', () => changeMonthOffset(-1));
             document.getElementById('nextMonthBtn').addEventListener('click', () => changeMonthOffset(1));
-
             document.getElementById('editIncomeBtn').addEventListener('click', editTotalIncome);
 
-            // Abas Despesas / Ganhos
             const tabExpense = document.getElementById('tabExpense');
             const tabGain = document.getElementById('tabGain');
 
@@ -662,6 +685,44 @@
             dbData.months[currentMonth].expenses.push(expense);
             saveDB();
             
+            // Seleção de frases por Faixa de Gasto (1 a 4)
+            let pool = [];
+            if (val <= 50) {
+                pool = [
+                    "Micro-gasto registrado. De grão em grão... olho vivo no caixa! 🐜",
+                    "Uma pequena saída. Gota d'água ou custo necessário? 💧",
+                    "Valor leve, mas cada centavo conta na hora de somar o mês. 🪙",
+                    "Beliscada no saldo. Cuidado com o efeito formiguinha! 🐜",
+                    "Pequena despesa computada. Mantendo o radar ligado. 📡"
+                ];
+            } else if (val <= 200) {
+                pool = [
+                    "Despesa moderada na área. Investimento em bem-estar ou impulso? 🤔",
+                    "Mais um valor computado. O painel segue firme, mas atenção aos detalhes. 📊",
+                    "Custo médio registrado. Cada decisão molda o saldo final do mês. ⚖️",
+                    "Gasto intermediário na balança. Valeu a pena? ⚖️",
+                    "Valor moderado lançado. Olho no planejamento para não apertar o passo. 👟"
+                ];
+            } else if (val <= 800) {
+                pool = [
+                    "Valor de impacto intermediário. Essa compra estava no planejamento? 🧭",
+                    "Atenção ao ponteiro: essa despesa mexe de verdade com a margem do mês. ⚠️",
+                    "Saída expressiva de caixa. Valeu cada centavo para o seu objetivo? 🎯",
+                    "Impacto considerável no mês. Hora de calibrar o leme! ⚓",
+                    "Despesa de peso médio. O painel sentiu, mas segue sob controle. 🛡️"
+                ];
+            } else {
+                pool = [
+                    "Alerta de peso no caixa! Custos altos exigem o dobro de foco nas entradas. 🛠️",
+                    "Movimentação pesada registrada. Hora de acelerar as vendas para equilibrar o jogo! ⚡",
+                    "Saída de grande porte. É hora de repensar as próximas curvas da pista. 🏎️",
+                    "Investimento ou rombo? Valor pesado computado, mantenha a rota firme! 🧭",
+                    "Custo de alto impacto detectado. O motor rugiu alto, agora é compensar no faturamento! 🚀"
+                ];
+            }
+            const randomExpPhrase = pool[Math.floor(Math.random() * pool.length)];
+            showNotification('expense', `Despesa: -${formatCurrency(val)}`, randomExpPhrase);
+
             document.getElementById('descInput').value = '';
             document.getElementById('valInput').value = '';
             document.getElementById('descInput').focus();
@@ -687,6 +748,16 @@
             dbData.months[currentMonth].gains.push(gain);
             saveDB();
             
+            const gainPhrases = [
+                "Mais um resultado para a conta! O motor tá girando forte. 🚀",
+                "Dinheiro no caixa é combustível para o próximo objetivo! 🎯",
+                "Faturamento somado. Rumo ao topo, meu sócio! 💰",
+                "Entrada registrada com sucesso. O negócio está escalando! 📈",
+                "Mais faturamento computado. Mantendo o ritmo de crescimento! ⚡"
+            ];
+            const randomGainPhrase = gainPhrases[Math.floor(Math.random() * gainPhrases.length)];
+            showNotification('gain', `Ganho: +${formatCurrency(val)}`, randomGainPhrase);
+
             document.getElementById('descInput').value = '';
             document.getElementById('valInput').value = '';
             document.getElementById('descInput').focus();
@@ -1116,7 +1187,6 @@
         }
 
         function setupModals() {
-            // Modal de Histórico
             const historyModal = document.getElementById('historyModal');
             document.getElementById('historyBtn').addEventListener('click', () => {
                 renderHistoryTable();
@@ -1125,7 +1195,6 @@
             });
             document.getElementById('closeHistoryModalBtn').addEventListener('click', () => historyModal.classList.add('hidden'));
 
-            // Modal Categoria
             const catModal = document.getElementById('categoryModal');
             document.getElementById('newCategoryBtn').addEventListener('click', () => {
                 if (activeTab === 'gain') {
@@ -1150,7 +1219,6 @@
                 }
             });
 
-            // Modal Editar Lançamento
             const editModal = document.getElementById('editModal');
             document.getElementById('closeEditModalBtn').addEventListener('click', () => editModal.classList.add('hidden'));
             
