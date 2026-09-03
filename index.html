@@ -51,8 +51,6 @@
 </head>
 <body class="antialiased min-h-screen pb-10">
 
-    <div id="toastContainer" class="fixed top-4 inset-x-0 z-[200] flex flex-col items-center gap-2 pointer-events-none px-4"></div>
-
     <header class="sticky top-0 z-50 glass-effect shadow-sm">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 flex justify-between items-center gap-2">
             <div class="flex items-center gap-2">
@@ -62,6 +60,7 @@
                 <h1 class="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400">FinDash</h1>
             </div>
 
+            <!-- Mês, Ano e Botão de Histórico Comparativo -->
             <div class="flex items-center gap-1.5">
                 <div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700">
                     <button id="prevMonthBtn" class="p-1.5 hover:bg-white dark:hover:bg-slate-700 rounded-lg transition text-slate-600 dark:text-slate-300">
@@ -97,6 +96,7 @@
 
     <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 mt-6 space-y-4">
         
+        <!-- Bloco de Renda com Botão Lápis Direto -->
         <section class="glass-effect rounded-2xl shadow-sm p-4 sm:p-6">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <div>
@@ -112,6 +112,7 @@
             </div>
         </section>
 
+        <!-- KPI Cards Lado a Lado -->
         <section class="grid grid-cols-3 gap-2 sm:gap-4">
             <div class="glass-effect rounded-2xl shadow-sm p-3 sm:p-5 flex flex-col justify-between border-l-4 border-rose-500">
                 <div class="flex justify-between items-start">
@@ -158,6 +159,7 @@
             </div>
         </section>
 
+        <!-- 1. LANÇAMENTOS (Com Seletor Despesas / Ganhos) -->
         <section class="glass-effect rounded-2xl shadow-sm p-4 sm:p-6">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
@@ -166,6 +168,7 @@
                 <div class="text-xs sm:text-sm text-slate-500 dark:text-slate-400" id="totalItemsCount">0 itens</div>
             </div>
 
+            <!-- Seletor de Tipo (Despesas / Ganhos) -->
             <div class="flex gap-2 mb-3 bg-slate-200 dark:bg-slate-700/60 p-1 rounded-xl w-fit text-xs font-semibold">
                 <button type="button" id="tabExpense" class="px-4 py-1.5 rounded-lg bg-indigo-600 text-white transition shadow-sm">Despesas</button>
                 <button type="button" id="tabGain" class="px-4 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 transition">Ganhos</button>
@@ -224,6 +227,7 @@
             </div>
         </section>
 
+        <!-- 2. GRÁFICOS DE ROSCA LADO A LADO -->
         <section class="grid grid-cols-2 gap-3 sm:gap-6">
             <div class="glass-effect rounded-2xl shadow-sm p-3 sm:p-6">
                 <h2 class="text-xs sm:text-lg font-bold text-slate-800 dark:text-white mb-2 truncate">Gastos por Categoria</h2>
@@ -246,6 +250,7 @@
             </div>
         </section>
 
+        <!-- Análise 50/30/20 & Timeline -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <section class="glass-effect rounded-2xl shadow-sm p-4 sm:p-6">
                 <div class="flex justify-between items-center mb-4">
@@ -310,6 +315,7 @@
             </section>
         </div>
 
+        <!-- Alertas Inteligentes -->
         <section class="glass-effect rounded-2xl shadow-sm p-4 sm:p-6">
             <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white mb-1 flex items-center gap-2">
                 <i class="fa-solid fa-lightbulb text-amber-400"></i> Alertas Inteligentes & Insights
@@ -320,6 +326,7 @@
 
     </main>
 
+    <!-- Modal Histórico Comparativo -->
     <div id="historyModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] hidden flex justify-center items-center opacity-0 transition-opacity duration-300 p-4">
         <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-lg p-5 sm:p-6 transform scale-95 transition-transform duration-300">
             <div class="flex justify-between items-center mb-4">
@@ -339,12 +346,14 @@
                         </tr>
                     </thead>
                     <tbody id="historyTableBody">
-                        </tbody>
+                        <!-- Preenchido via JS -->
+                    </tbody>
                 </table>
             </div>
         </div>
     </div>
 
+    <!-- Modal Editar Lançamento -->
     <div id="editModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] hidden flex justify-center items-center opacity-0 transition-opacity duration-300 p-4">
         <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md p-5 sm:p-6 transform scale-95 transition-transform duration-300">
             <div class="flex justify-between items-center mb-4">
@@ -384,6 +393,7 @@
         </div>
     </div>
 
+    <!-- Modal Categoria -->
     <div id="categoryModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] hidden flex justify-center items-center opacity-0 transition-opacity duration-300 p-4">
         <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md p-5 sm:p-6 transform scale-95 transition-transform duration-300">
             <div class="flex justify-between items-center mb-4">
@@ -408,6 +418,7 @@
         </div>
     </div>
     
+    <!-- Modal Info -->
     <div id="infoModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] hidden flex justify-center items-center opacity-0 transition-opacity duration-300 p-4">
         <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md p-5 sm:p-6 relative">
             <button id="closeInfoBtn" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -470,40 +481,56 @@
         const formatCurrency = (val) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
         const generateId = () => Math.random().toString(36).substr(2, 9);
 
-        // Sistema de Notificações Push Estilo iOS com animações
+        // Sistema de Notificações Centralizadas com Atraso e Visual Viewport API
         function showNotification(type, title, message) {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            
-            const isGain = type === 'gain';
-            const bgColor = isGain 
-                ? 'bg-emerald-900/95 text-emerald-100 border-emerald-500/50 shadow-emerald-900/30' 
-                : 'bg-rose-900/95 text-rose-100 border-rose-500/50 shadow-rose-900/30';
-            
-            toast.className = `pointer-events-auto flex items-start gap-3 px-4 py-3 rounded-2xl shadow-2xl border backdrop-blur-md transition-all duration-300 transform -translate-y-6 opacity-0 max-w-sm w-full ${bgColor}`;
-            
-            const iconHtml = isGain 
-                ? `<div class="text-2xl animate-bounce">✅</div>` 
-                : `<div class="text-2xl animate-pulse">⛔️</div>`;
+            setTimeout(() => {
+                const toast = document.createElement('div');
+                const isGain = type === 'gain';
+                const bgColor = isGain 
+                    ? 'bg-emerald-900/95 text-emerald-100 border-emerald-500/50 shadow-emerald-900/30' 
+                    : 'bg-rose-900/95 text-rose-100 border-rose-500/50 shadow-rose-900/30';
                 
-            toast.innerHTML = `
-                <div class="shrink-0 pt-0.5">${iconHtml}</div>
-                <div class="flex-grow overflow-hidden">
-                    <h4 class="font-bold text-xs uppercase tracking-wider opacity-90">${title}</h4>
-                    <p class="text-xs mt-0.5 leading-relaxed font-medium">${message}</p>
-                </div>
-            `;
-            
-            container.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.classList.remove('-translate-y-6', 'opacity-0');
-            }, 10);
-            
-            setTimeout(() => {
-                toast.classList.add('-translate-y-6', 'opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, 4000);
+                toast.className = `fixed z-[300] flex items-start gap-3 px-4 py-3 rounded-2xl shadow-2xl border backdrop-blur-md transition-all duration-300 transform -translate-x-1/2 -translate-y-1/2 scale-95 opacity-0 max-w-sm w-[90%] sm:w-full ${bgColor}`;
+                
+                const iconHtml = isGain 
+                    ? `<div class="text-2xl animate-bounce">✅</div>` 
+                    : `<div class="text-2xl animate-pulse">⛔️</div>`;
+                    
+                toast.innerHTML = `
+                    <div class="shrink-0 pt-0.5">${iconHtml}</div>
+                    <div class="flex-grow overflow-hidden">
+                        <h4 class="font-bold text-xs uppercase tracking-wider opacity-90">${title}</h4>
+                        <p class="text-xs mt-0.5 leading-relaxed font-medium">${message}</p>
+                    </div>
+                `;
+                
+                document.body.appendChild(toast);
+                
+                // Ancoragem exata no centro da tela ampliada (Visual Viewport)
+                if (window.visualViewport) {
+                    const vv = window.visualViewport;
+                    const centerX = vv.offsetLeft + (vv.width / 2);
+                    const centerY = vv.offsetTop + (vv.height / 2);
+                    toast.style.left = `${centerX}px`;
+                    toast.style.top = `${centerY}px`;
+                } else {
+                    toast.style.left = '50%';
+                    toast.style.top = '50%';
+                }
+                
+                // Animação de entrada
+                setTimeout(() => {
+                    toast.classList.remove('scale-95', 'opacity-0');
+                    toast.classList.add('scale-100');
+                }, 10);
+                
+                // Tempo de exibição e animação de saída
+                setTimeout(() => {
+                    toast.classList.add('scale-95', 'opacity-0');
+                    setTimeout(() => toast.remove(), 300);
+                }, 3500);
+
+            }, 250); // Atraso estratégico para o zoom e scroll estabilizarem no mobile
         }
 
         function init() {
@@ -685,7 +712,6 @@
             dbData.months[currentMonth].expenses.push(expense);
             saveDB();
             
-            // Seleção de frases por Faixa de Gasto (1 a 4)
             let pool = [];
             if (val <= 50) {
                 pool = [
