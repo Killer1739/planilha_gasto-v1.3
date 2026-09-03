@@ -507,31 +507,28 @@
                 
                 document.body.appendChild(toast);
                 
-                // Ancoragem no centro da tela ampliada, deslocada ~55px (aprox. 1,5cm) para cima
                 if (window.visualViewport) {
                     const vv = window.visualViewport;
                     const centerX = vv.offsetLeft + (vv.width / 2);
-                    const centerY = vv.offsetTop + (vv.height / 2) - 55; // Deslocado para cima
+                    const centerY = vv.offsetTop + (vv.height / 2) - 55;
                     toast.style.left = `${centerX}px`;
                     toast.style.top = `${centerY}px`;
                 } else {
                     toast.style.left = '50%';
-                    toast.style.top = '38%'; // Fallback levemente acima do meio
+                    toast.style.top = '38%';
                 }
                 
-                // Animação de entrada
                 setTimeout(() => {
                     toast.classList.remove('scale-95', 'opacity-0');
                     toast.classList.add('scale-100');
                 }, 10);
                 
-                // Tempo de exibição e animação de saída
                 setTimeout(() => {
                     toast.classList.add('scale-95', 'opacity-0');
                     setTimeout(() => toast.remove(), 300);
                 }, 3500);
 
-            }, 250); // Atraso estratégico para o zoom e scroll estabilizarem no mobile
+            }, 250);
         }
 
         function init() {
@@ -879,7 +876,9 @@
             const m = dbData.months[currentMonth];
             const expenses = (m.expenses || []).map(e => ({ ...e, typeItem: 'expense' }));
             const gains = (m.gains || []).map(g => ({ ...g, typeItem: 'gain' }));
-            const allItems = [...expenses, ...gains].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // Invertido: os mais recentes cadastrados agora aparecem sempre no topo da lista
+            const allItems = [...expenses, ...gains].reverse();
 
             document.getElementById('totalItemsCount').textContent = `${allItems.length} item${allItems.length !== 1 ? 's' : ''}`;
             
