@@ -60,14 +60,19 @@
                 <h1 class="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400">FinDash</h1>
             </div>
 
-            <!-- Mês e Ano Selecionado -->
-            <div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700">
-                <button id="prevMonthBtn" class="p-1.5 hover:bg-white dark:hover:bg-slate-700 rounded-lg transition text-slate-600 dark:text-slate-300">
-                    <i class="fa-solid fa-chevron-left text-xs"></i>
-                </button>
-                <input type="month" id="currentMonthInput" class="bg-transparent font-semibold text-xs sm:text-sm text-slate-700 dark:text-slate-200 outline-none px-1 cursor-pointer">
-                <button id="nextMonthBtn" class="p-1.5 hover:bg-white dark:hover:bg-slate-700 rounded-lg transition text-slate-600 dark:text-slate-300">
-                    <i class="fa-solid fa-chevron-right text-xs"></i>
+            <!-- Mês, Ano e Botão de Histórico Comparativo -->
+            <div class="flex items-center gap-1.5">
+                <div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700">
+                    <button id="prevMonthBtn" class="p-1.5 hover:bg-white dark:hover:bg-slate-700 rounded-lg transition text-slate-600 dark:text-slate-300">
+                        <i class="fa-solid fa-chevron-left text-xs"></i>
+                    </button>
+                    <input type="month" id="currentMonthInput" class="bg-transparent font-semibold text-xs sm:text-sm text-slate-700 dark:text-slate-200 outline-none px-1 cursor-pointer">
+                    <button id="nextMonthBtn" class="p-1.5 hover:bg-white dark:hover:bg-slate-700 rounded-lg transition text-slate-600 dark:text-slate-300">
+                        <i class="fa-solid fa-chevron-right text-xs"></i>
+                    </button>
+                </div>
+                <button id="historyBtn" title="Histórico Comparativo" class="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 text-indigo-600 dark:text-indigo-400 transition text-xs sm:text-sm border border-indigo-200 dark:border-indigo-800">
+                    <i class="fa-solid fa-chart-column"></i>
                 </button>
             </div>
 
@@ -91,17 +96,20 @@
 
     <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 mt-6 space-y-4">
         
+        <!-- Bloco de Renda com Múltiplas Fontes -->
         <section class="glass-effect rounded-2xl shadow-sm p-4 sm:p-6">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <div>
-                    <h2 class="text-base sm:text-lg font-semibold text-slate-700 dark:text-slate-200">Renda Mensal Líquida</h2>
-                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Valor total recebido neste mês</p>
+                    <h2 class="text-base sm:text-lg font-semibold text-slate-700 dark:text-slate-200">Renda Mensal Líquida Total</h2>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400" id="incomeSubtitle">Gerencie suas fontes de entrada do mês</p>
                 </div>
-                <div class="relative w-full sm:w-64">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <span class="text-slate-500 sm:text-sm font-semibold">R$</span>
+                <div class="flex items-center gap-3 w-full sm:w-auto">
+                    <div class="text-left sm:text-right flex-grow sm:flex-grow-0">
+                        <span class="text-xl sm:text-2xl font-bold text-emerald-600 dark:text-emerald-400" id="totalIncomeDisplay">R$ 0,00</span>
                     </div>
-                    <input type="number" id="incomeInput" value="5000" min="0" step="100" class="block w-full pl-10 pr-3 py-2.5 text-base sm:text-lg font-bold bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-800 dark:text-white" placeholder="0.00">
+                    <button id="manageIncomesBtn" class="px-3 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl transition text-xs sm:text-sm font-medium flex items-center gap-1.5 shadow-sm shrink-0">
+                        <i class="fa-solid fa-wallet"></i> Entradas
+                    </button>
                 </div>
             </div>
         </section>
@@ -153,7 +161,7 @@
             </div>
         </section>
 
-        <!-- 1. LANÇAMENTOS -->
+        <!-- 1. LANÇAMENTOS (Com Forma de Pagamento) -->
         <section class="glass-effect rounded-2xl shadow-sm p-4 sm:p-6">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
@@ -164,18 +172,26 @@
 
             <form id="addExpenseForm" class="space-y-3 mb-4 bg-slate-50 dark:bg-slate-800/50 p-3 sm:p-4 rounded-xl border border-slate-200 dark:border-slate-700">
                 <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3">
-                    <div class="sm:col-span-4">
+                    <div class="sm:col-span-3">
                         <input type="text" id="descInput" required placeholder="Ex: Supermercado" class="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
                     </div>
-                    <div class="sm:col-span-4">
+                    <div class="sm:col-span-3">
                         <div class="flex gap-2">
                             <select id="categoryInput" required class="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
-                                <option value="" disabled selected>Selecione...</option>
+                                <option value="" disabled selected>Categoria...</option>
                             </select>
-                            <button type="button" id="newCategoryBtn" class="px-2.5 py-2 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-300 transition text-xs" title="Nova Categoria">
+                            <button type="button" id="newCategoryBtn" class="px-2 py-2 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-300 transition text-xs shrink-0" title="Nova Categoria">
                                 <i class="fa-solid fa-plus"></i>
                             </button>
                         </div>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <select id="paymentMethodInput" required class="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
+                            <option value="Pix">Pix</option>
+                            <option value="Cartão de Crédito">Cartão Crédito</option>
+                            <option value="Débito">Débito</option>
+                            <option value="Dinheiro">Dinheiro</option>
+                        </select>
                     </div>
                     <div class="sm:col-span-3">
                         <div class="relative">
@@ -295,15 +311,75 @@
             </section>
         </div>
 
+        <!-- Insights & Alertas Inteligentes Dinâmicos -->
         <section class="glass-effect rounded-2xl shadow-sm p-4 sm:p-6">
             <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white mb-1 flex items-center gap-2">
-                <i class="fa-solid fa-lightbulb text-amber-400"></i> Insights & Recomendações
+                <i class="fa-solid fa-lightbulb text-amber-400"></i> Alertas Inteligentes & Insights
             </h2>
-            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mb-4">Sugestões baseadas no seu perfil atual.</p>
+            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mb-4">Análise automática da sua saúde financeira atual.</p>
             <div id="recommendationsContainer" class="grid grid-cols-1 sm:grid-cols-3 gap-3"></div>
         </section>
 
     </main>
+
+    <!-- Modal Gerenciar Entradas (Múltiplas Rendas) -->
+    <div id="incomeModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] hidden flex justify-center items-center opacity-0 transition-opacity duration-300 p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md p-5 sm:p-6 transform scale-95 transition-transform duration-300">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-wallet text-emerald-500"></i> Fontes de Renda do Mês
+                </h3>
+                <button id="closeIncomeModalBtn" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="addIncomeForm" class="space-y-3 mb-4 bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
+                <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
+                    <div class="sm:col-span-6">
+                        <input type="text" id="incDescInput" required placeholder="Ex: Salário, Freelance" class="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
+                    </div>
+                    <div class="sm:col-span-4">
+                        <input type="number" id="incValInput" required min="0.01" step="0.01" placeholder="R$ 0,00" class="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <button type="submit" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition flex justify-center items-center text-xs sm:text-sm shadow-sm">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <div class="overflow-y-auto max-h-48 pr-1">
+                <ul id="incomesList" class="space-y-2">
+                    <li class="text-center text-slate-400 text-xs py-4">Nenhuma entrada cadastrada.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Histórico Comparativo -->
+    <div id="historyModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] hidden flex justify-center items-center opacity-0 transition-opacity duration-300 p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-lg p-5 sm:p-6 transform scale-95 transition-transform duration-300">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-chart-column text-indigo-500"></i> Histórico Comparativo
+                </h3>
+                <button id="closeHistoryModalBtn" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="overflow-y-auto max-h-80 pr-1">
+                <table class="w-full text-left text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                    <thead class="border-b dark:border-slate-700 text-slate-400 uppercase text-[10px]">
+                        <tr>
+                            <th class="py-2 px-2">Mês</th>
+                            <th class="py-2 px-2">Renda</th>
+                            <th class="py-2 px-2">Gastos</th>
+                            <th class="py-2 px-2">Sobra</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                        <!-- Preenchido via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal Editar Lançamento -->
     <div id="editModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] hidden flex justify-center items-center opacity-0 transition-opacity duration-300 p-4">
@@ -321,6 +397,15 @@
                 <div>
                     <label class="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Categoria</label>
                     <select id="editCategoryInput" required class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white"></select>
+                </div>
+                <div>
+                    <label class="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Forma de Pagamento</label>
+                    <select id="editPaymentMethodInput" required class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
+                        <option value="Pix">Pix</option>
+                        <option value="Cartão de Crédito">Cartão Crédito</option>
+                        <option value="Débito">Débito</option>
+                        <option value="Dinheiro">Dinheiro</option>
+                    </select>
                 </div>
                 <div>
                     <label class="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Valor (R$)</label>
@@ -388,10 +473,10 @@
         let savingsChartInstance = null;
         let timelineChartInstance = null;
         const colors = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899', '#f97316'];
-        const savingsColors = ['#ef4444', '#10b981']; // Vermelho para Gastos Totais, Verde para Sobra Livre
+        const savingsColors = ['#ef4444', '#10b981'];
 
         const currentMonthInput = document.getElementById('currentMonthInput');
-        const incomeInput = document.getElementById('incomeInput');
+        const totalIncomeDisplay = document.getElementById('totalIncomeDisplay');
         const expensesList = document.getElementById('expensesList');
         const addExpenseForm = document.getElementById('addExpenseForm');
         const emptyStateMsg = document.getElementById('emptyStateMsg');
@@ -425,27 +510,24 @@
         function init() {
             currentMonthInput.value = currentMonth;
             ensureMonthExists(currentMonth);
-            loadMonthDataToUI();
 
             currentMonthInput.addEventListener('change', (e) => {
                 currentMonth = e.target.value;
                 ensureMonthExists(currentMonth);
-                loadMonthDataToUI();
                 updateDashboard();
             });
 
             document.getElementById('prevMonthBtn').addEventListener('click', () => changeMonthOffset(-1));
             document.getElementById('nextMonthBtn').addEventListener('click', () => changeMonthOffset(1));
 
-            incomeInput.addEventListener('input', (e) => {
-                dbData.months[currentMonth].income = parseFloat(e.target.value) || 0;
-                saveDB();
-                updateDashboard();
-            });
-
             addExpenseForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 addExpense();
+            });
+
+            document.getElementById('addIncomeForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                addIncomeSource();
             });
 
             document.getElementById('clearMonthBtn').addEventListener('click', clearCurrentMonth);
@@ -460,23 +542,33 @@
 
         function ensureMonthExists(monthStr) {
             if (!dbData.months[monthStr]) {
-                let defaultIncome = 5000;
+                let defaultIncomes = [{ id: generateId(), description: 'Salário Principal', value: 5000 }];
                 let recurrentExpenses = [];
 
                 const sortedMonths = Object.keys(dbData.months).sort();
                 if (sortedMonths.length > 0) {
                     const lastMonth = sortedMonths[sortedMonths.length - 1];
-                    defaultIncome = dbData.months[lastMonth].income;
+                    const lastIncomes = dbData.months[lastMonth].incomes || [];
+                    defaultIncomes = lastIncomes.map(inc => ({ ...inc, id: generateId() }));
+                    
                     recurrentExpenses = (dbData.months[lastMonth].expenses || [])
                         .filter(exp => exp.recurrent)
                         .map(exp => ({ ...exp, id: generateId(), date: `${monthStr}-01` }));
                 }
 
                 dbData.months[monthStr] = {
-                    income: defaultIncome,
+                    incomes: defaultIncomes,
                     expenses: recurrentExpenses
                 };
                 saveDB();
+            } else {
+                // Compatibilidade com estrutura antiga caso exista
+                const m = dbData.months[monthStr];
+                if (!m.incomes) {
+                    m.incomes = [{ id: generateId(), description: 'Renda Principal', value: m.income || 5000 }];
+                    delete m.income;
+                    saveDB();
+                }
             }
         }
 
@@ -488,12 +580,7 @@
             currentMonth = `${year}-${String(month).padStart(2, '0')}`;
             currentMonthInput.value = currentMonth;
             ensureMonthExists(currentMonth);
-            loadMonthDataToUI();
             updateDashboard();
-        }
-
-        function loadMonthDataToUI() {
-            incomeInput.value = dbData.months[currentMonth].income;
         }
 
         function saveDB() {
@@ -502,7 +589,7 @@
 
         function setupCategorySelect() {
             const populate = (selectElement) => {
-                selectElement.innerHTML = '<option value="" disabled selected>Selecione...</option>';
+                selectElement.innerHTML = '<option value="" disabled selected>Categoria...</option>';
                 for (let cat in dbData.categories) {
                     const opt = document.createElement('option');
                     opt.value = cat;
@@ -514,9 +601,59 @@
             populate(document.getElementById('editCategoryInput'));
         }
 
+        function getMonthIncome(monthStr) {
+            const m = dbData.months[monthStr];
+            if (!m || !m.incomes) return 0;
+            return m.incomes.reduce((acc, curr) => acc + curr.value, 0);
+        }
+
+        function addIncomeSource() {
+            const desc = document.getElementById('incDescInput').value.trim();
+            const val = parseFloat(document.getElementById('incValInput').value);
+            if (!desc || isNaN(val) || val <= 0) return;
+
+            dbData.months[currentMonth].incomes.push({ id: generateId(), description: desc, value: val });
+            saveDB();
+            document.getElementById('addIncomeForm').reset();
+            renderIncomesList();
+            updateDashboard();
+        }
+
+        window.removeIncomeSource = function(id) {
+            dbData.months[currentMonth].incomes = dbData.months[currentMonth].incomes.filter(i => i.id !== id);
+            saveDB();
+            renderIncomesList();
+            updateDashboard();
+        }
+
+        function renderIncomesList() {
+            const incomes = dbData.months[currentMonth].incomes || [];
+            const list = document.getElementById('incomesList');
+            list.innerHTML = '';
+
+            if (incomes.length === 0) {
+                list.innerHTML = `<li class="text-center text-slate-400 text-xs py-4">Nenhuma entrada cadastrada.</li>`;
+                return;
+            }
+
+            incomes.forEach(inc => {
+                const li = document.createElement('li');
+                li.className = 'flex justify-between items-center p-2 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 text-xs sm:text-sm';
+                li.innerHTML = `
+                    <span class="font-medium text-slate-700 dark:text-slate-200">${inc.description}</span>
+                    <div class="flex items-center gap-3">
+                        <span class="font-bold text-emerald-600">${formatCurrency(inc.value)}</span>
+                        <button onclick="removeIncomeSource('${inc.id}')" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                `;
+                list.appendChild(li);
+            });
+        }
+
         function addExpense() {
             const desc = document.getElementById('descInput').value.trim();
             const cat = document.getElementById('categoryInput').value;
+            const paymentMethod = document.getElementById('paymentMethodInput').value;
             const val = parseFloat(document.getElementById('valInput').value);
             const recurrent = document.getElementById('recurrentCheck').checked;
 
@@ -526,6 +663,7 @@
                 id: generateId(),
                 description: desc,
                 category: cat,
+                paymentMethod: paymentMethod,
                 value: val,
                 type: dbData.categories[cat] || 'wants',
                 recurrent: recurrent,
@@ -535,7 +673,8 @@
             dbData.months[currentMonth].expenses.push(expense);
             saveDB();
             
-            addExpenseForm.reset();
+            document.getElementById('descInput').value = '';
+            document.getElementById('valInput').value = '';
             document.getElementById('descInput').focus();
             updateDashboard();
         }
@@ -555,6 +694,7 @@
             document.getElementById('editIdInput').value = exp.id;
             document.getElementById('editDescInput').value = exp.description;
             document.getElementById('editCategoryInput').value = exp.category;
+            document.getElementById('editPaymentMethodInput').value = exp.paymentMethod || 'Pix';
             document.getElementById('editValInput').value = exp.value;
             document.getElementById('editRecurrentCheck').checked = exp.recurrent || false;
 
@@ -572,19 +712,21 @@
         }
 
         function updateDashboard() {
+            ensureMonthExists(currentMonth);
             renderExpensesList();
+            renderIncomesList();
             const stats = calculateStats();
             updateKPIs(stats);
             update503020(stats);
             updateChart(stats.byCategory);
             updateSavingsChart(stats);
             updateTimelineChart(dbData.months[currentMonth].expenses);
-            generateRecommendations(stats);
+            generateSmartAlerts(stats);
         }
 
         function calculateStats() {
             const expenses = dbData.months[currentMonth].expenses;
-            const income = dbData.months[currentMonth].income;
+            const income = getMonthIncome(currentMonth);
             let total = 0, needsTotal = 0, wantsTotal = 0, debtTotal = 0;
             let byCategory = {};
 
@@ -633,7 +775,7 @@
                                 <span class="truncate">${exp.description}</span>
                                 ${exp.recurrent ? '<span class="text-[9px] bg-indigo-100 text-indigo-600 dark:bg-indigo-900/40 dark:text-indigo-300 px-1 py-0.2 rounded-full font-normal shrink-0">Fixa</span>' : ''}
                             </p>
-                            <p class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate">${exp.category}</p>
+                            <p class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate">${exp.category} • <span class="font-medium text-slate-600 dark:text-slate-300">${exp.paymentMethod || 'Pix'}</span></p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2 shrink-0">
@@ -649,6 +791,7 @@
         }
 
         function updateKPIs(stats) {
+            totalIncomeDisplay.textContent = formatCurrency(stats.income);
             totalExpensesDisplay.textContent = formatCurrency(stats.total);
             remainingBalanceDisplay.textContent = formatCurrency(stats.remaining);
             
@@ -810,18 +953,38 @@
             }
         }
 
-        function generateRecommendations(stats) {
+        function generateSmartAlerts(stats) {
             recommendationsContainer.innerHTML = '';
-            if (dbData.months[currentMonth].expenses.length === 0) {
-                recommendationsContainer.innerHTML = `<div class="col-span-3 text-center text-slate-400 text-xs py-3">Adicione gastos para ver dicas.</div>`;
-                return;
-            }
+            let tips = [];
 
-            let tips = [{
-                icon: 'fa-check', color: 'text-emerald-500', bg: 'bg-emerald-100 dark:bg-emerald-900/30',
-                title: 'Controle Ativo',
-                desc: 'Continue registrando seus gastos para manter suas finanças sob total controle.'
-            }];
+            const dayOfMonth = new Date().getDate();
+            const expRatio = stats.income > 0 ? stats.total / stats.income : 0;
+
+            if (dbData.months[currentMonth].expenses.length === 0) {
+                tips.push({
+                    icon: 'fa-info', color: 'text-indigo-500', bg: 'bg-indigo-100 dark:bg-indigo-900/30',
+                    title: 'Início do Mês',
+                    desc: 'Cadastre suas entradas de renda e seus primeiros lançamentos para disparar as análises.'
+                });
+            } else if (expRatio > 0.9) {
+                tips.push({
+                    icon: 'fa-triangle-exclamation', color: 'text-rose-500', bg: 'bg-rose-100 dark:bg-rose-900/30',
+                    title: 'Alerta Vermelho',
+                    desc: 'Você já comprometeu mais de 90% da sua renda mensal. Cuidado com os gastos de última hora!'
+                });
+            } else if (dayOfMonth > 15 && expRatio < 0.5) {
+                tips.push({
+                    icon: 'fa-trophy', color: 'text-emerald-500', bg: 'bg-emerald-100 dark:bg-emerald-900/30',
+                    title: 'Excelente Gestão',
+                    desc: 'Parabéns! Passamos da metade do mês e seus gastos estão abaixo de 50% da renda.'
+                });
+            } else {
+                tips.push({
+                    icon: 'fa-check', color: 'text-emerald-500', bg: 'bg-emerald-100 dark:bg-emerald-900/30',
+                    title: 'Controle Ativo',
+                    desc: 'Continue registrando seus pagamentos por Pix, cartão ou dinheiro para manter o painel preciso.'
+                });
+            }
 
             tips.forEach(tip => {
                 const div = document.createElement('div');
@@ -836,6 +999,37 @@
                     <p class="text-[11px] text-slate-600 dark:text-slate-400">${tip.desc}</p>
                 `;
                 recommendationsContainer.appendChild(div);
+            });
+        }
+
+        function renderHistoryTable() {
+            const tbody = document.getElementById('historyTableBody');
+            tbody.innerHTML = '';
+
+            const sortedMonths = Object.keys(dbData.months).sort().reverse();
+            if (sortedMonths.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-slate-400">Nenhum dado histórico registrado.</td></tr>`;
+                return;
+            }
+
+            sortedMonths.forEach(mStr => {
+                const mData = dbData.months[mStr];
+                const inc = (mData.incomes || []).reduce((a, b) => a + b.value, 0);
+                const exp = (mData.expenses || []).reduce((a, b) => a + b.value, 0);
+                const rem = inc - exp;
+
+                const [year, month] = mStr.split('-');
+                const monthName = new Date(year, month - 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+
+                const tr = document.createElement('tr');
+                tr.className = 'border-b dark:border-slate-700/50 hover:bg-slate-50 dark:hover:bg-slate-800/40';
+                tr.innerHTML = `
+                    <td class="py-2.5 px-2 font-medium capitalize text-slate-800 dark:text-slate-200">${monthName}</td>
+                    <td class="py-2.5 px-2 text-emerald-600 font-semibold">${formatCurrency(inc)}</td>
+                    <td class="py-2.5 px-2 text-rose-500 font-semibold">${formatCurrency(exp)}</td>
+                    <td class="py-2.5 px-2 font-bold ${rem >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-500'}">${formatCurrency(rem)}</td>
+                `;
+                tbody.appendChild(tr);
             });
         }
 
@@ -860,7 +1054,7 @@
                         dbData = parsed;
                         saveDB();
                         setupCategorySelect();
-                        loadMonthDataToUI();
+                        ensureMonthExists(currentMonth);
                         updateDashboard();
                         alert("Dados importados com sucesso!");
                     } else {
@@ -874,12 +1068,31 @@
         }
 
         function setupModals() {
-            const modal = document.getElementById('categoryModal');
-            document.getElementById('newCategoryBtn').addEventListener('click', () => {
-                modal.classList.remove('hidden');
-                setTimeout(() => modal.classList.remove('opacity-0'), 10);
+            // Modal de Rendas
+            const incomeModal = document.getElementById('incomeModal');
+            document.getElementById('manageIncomesBtn').addEventListener('click', () => {
+                renderIncomesList();
+                incomeModal.classList.remove('hidden');
+                setTimeout(() => incomeModal.classList.remove('opacity-0'), 10);
             });
-            document.getElementById('closeModalBtn').addEventListener('click', () => modal.classList.add('hidden'));
+            document.getElementById('closeIncomeModalBtn').addEventListener('click', () => incomeModal.classList.add('hidden'));
+
+            // Modal de Histórico
+            const historyModal = document.getElementById('historyModal');
+            document.getElementById('historyBtn').addEventListener('click', () => {
+                renderHistoryTable();
+                historyModal.classList.remove('hidden');
+                setTimeout(() => historyModal.classList.remove('opacity-0'), 10);
+            });
+            document.getElementById('closeHistoryModalBtn').addEventListener('click', () => historyModal.classList.add('hidden'));
+
+            // Modal Categoria
+            const catModal = document.getElementById('categoryModal');
+            document.getElementById('newCategoryBtn').addEventListener('click', () => {
+                catModal.classList.remove('hidden');
+                setTimeout(() => catModal.classList.remove('opacity-0'), 10);
+            });
+            document.getElementById('closeModalBtn').addEventListener('click', () => catModal.classList.add('hidden'));
 
             document.getElementById('saveCategoryBtn').addEventListener('click', () => {
                 const name = document.getElementById('newCatName').value.trim();
@@ -890,10 +1103,11 @@
                     setupCategorySelect();
                     document.getElementById('categoryInput').value = name;
                     document.getElementById('newCatName').value = '';
-                    modal.classList.add('hidden');
+                    catModal.classList.add('hidden');
                 }
             });
 
+            // Modal Editar Lançamento
             const editModal = document.getElementById('editModal');
             document.getElementById('closeEditModalBtn').addEventListener('click', () => editModal.classList.add('hidden'));
             
@@ -902,6 +1116,7 @@
                 const id = document.getElementById('editIdInput').value;
                 const desc = document.getElementById('editDescInput').value.trim();
                 const cat = document.getElementById('editCategoryInput').value;
+                const paymentMethod = document.getElementById('editPaymentMethodInput').value;
                 const val = parseFloat(document.getElementById('editValInput').value);
                 const recurrent = document.getElementById('editRecurrentCheck').checked;
 
@@ -912,6 +1127,7 @@
                         ...expList[index],
                         description: desc,
                         category: cat,
+                        paymentMethod: paymentMethod,
                         value: val,
                         type: dbData.categories[cat] || 'wants',
                         recurrent: recurrent
