@@ -388,7 +388,7 @@
         let savingsChartInstance = null;
         let timelineChartInstance = null;
         const colors = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899', '#f97316'];
-        const savingsColors = ['#3b82f6', '#10b981']; // Azul para Gastos Totais, Verde para Sobra Livre
+        const savingsColors = ['#ef4444', '#10b981']; // Vermelho para Gastos Totais, Verde para Sobra Livre
 
         const currentMonthInput = document.getElementById('currentMonthInput');
         const incomeInput = document.getElementById('incomeInput');
@@ -729,7 +729,6 @@
             const ctx = document.getElementById('savingsChart').getContext('2d');
             const emptyState = document.getElementById('savingsChartEmptyState');
             
-            // Fatia azul: Gastos Totais | Fatia verde: Sobra Livre Restante
             let savingsLabels = ['Gastos Totais', 'Sobra Livre'];
             let savingsData = [Math.max(stats.total, 0), Math.max(stats.remaining, 0)];
 
