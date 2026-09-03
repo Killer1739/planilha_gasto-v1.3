@@ -52,327 +52,321 @@
 <body class="antialiased min-h-screen pb-10">
 
     <header class="sticky top-0 z-50 glass-effect shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-3">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 flex justify-between items-center gap-2">
+            <div class="flex items-center gap-2">
                 <div class="bg-indigo-600 text-white p-2 rounded-lg">
-                    <i class="fa-solid fa-chart-pie text-xl"></i>
+                    <i class="fa-solid fa-chart-pie text-lg"></i>
                 </div>
-                <h1 class="text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400">FinDash</h1>
+                <h1 class="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400">FinDash</h1>
             </div>
 
             <!-- Mês e Ano Selecionado -->
-            <div class="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 p-1.5 rounded-xl border border-slate-200 dark:border-slate-700">
-                <button id="prevMonthBtn" class="p-2 hover:bg-white dark:hover:bg-slate-700 rounded-lg transition text-slate-600 dark:text-slate-300">
+            <div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700">
+                <button id="prevMonthBtn" class="p-1.5 hover:bg-white dark:hover:bg-slate-700 rounded-lg transition text-slate-600 dark:text-slate-300">
                     <i class="fa-solid fa-chevron-left text-xs"></i>
                 </button>
-                <input type="month" id="currentMonthInput" class="bg-transparent font-semibold text-sm text-slate-700 dark:text-slate-200 outline-none px-2 cursor-pointer">
-                <button id="nextMonthBtn" class="p-2 hover:bg-white dark:hover:bg-slate-700 rounded-lg transition text-slate-600 dark:text-slate-300">
+                <input type="month" id="currentMonthInput" class="bg-transparent font-semibold text-xs sm:text-sm text-slate-700 dark:text-slate-200 outline-none px-1 cursor-pointer">
+                <button id="nextMonthBtn" class="p-1.5 hover:bg-white dark:hover:bg-slate-700 rounded-lg transition text-slate-600 dark:text-slate-300">
                     <i class="fa-solid fa-chevron-right text-xs"></i>
                 </button>
             </div>
 
-            <div class="flex items-center gap-2">
-                <button id="clearMonthBtn" title="Limpar todos os lançamentos do mês" class="p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/50 text-rose-600 dark:text-rose-400 transition text-sm">
+            <div class="flex items-center gap-1.5">
+                <button id="clearMonthBtn" title="Limpar mês" class="p-2 rounded-xl bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 text-rose-600 dark:text-rose-400 transition text-xs">
                     <i class="fa-solid fa-trash"></i>
                 </button>
-                <button id="exportBtn" title="Exportar Dados (Backup)" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition text-sm">
+                <button id="exportBtn" title="Backup" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-600 dark:text-slate-300 transition text-xs">
                     <i class="fa-solid fa-download"></i>
                 </button>
-                <label title="Importar Dados" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition text-sm cursor-pointer">
+                <label title="Importar" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-600 dark:text-slate-300 transition text-xs cursor-pointer">
                     <i class="fa-solid fa-upload"></i>
                     <input type="file" id="importFile" accept=".json" class="hidden">
                 </label>
-                <button id="themeToggle" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-slate-600 dark:text-slate-300">
-                    <i class="fa-solid fa-moon text-lg" id="themeIcon"></i>
+                <button id="themeToggle" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 transition-colors text-slate-600 dark:text-slate-300">
+                    <i class="fa-solid fa-moon text-base" id="themeIcon"></i>
                 </button>
             </div>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 space-y-6">
+    <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 mt-6 space-y-4">
         
-        <section class="glass-effect rounded-2xl shadow-sm p-6 relative overflow-hidden group">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative z-10">
+        <section class="glass-effect rounded-2xl shadow-sm p-4 sm:p-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <div>
-                    <h2 class="text-lg font-semibold text-slate-700 dark:text-slate-200">Renda Mensal Líquida (Mês Selecionado)</h2>
-                    <p class="text-sm text-slate-500 dark:text-slate-400">Qual o valor total recebido neste mês?</p>
+                    <h2 class="text-base sm:text-lg font-semibold text-slate-700 dark:text-slate-200">Renda Mensal Líquida</h2>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Valor total recebido neste mês</p>
                 </div>
-                <div class="relative w-full md:w-64">
+                <div class="relative w-full sm:w-64">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <span class="text-slate-500 sm:text-sm font-semibold">R$</span>
                     </div>
-                    <input type="number" id="incomeInput" value="5000" min="0" step="100" class="block w-full pl-10 pr-3 py-3 text-lg font-bold bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-800 dark:text-white" placeholder="0.00">
+                    <input type="number" id="incomeInput" value="5000" min="0" step="100" class="block w-full pl-10 pr-3 py-2.5 text-base sm:text-lg font-bold bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-800 dark:text-white" placeholder="0.00">
                 </div>
             </div>
         </section>
 
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="glass-effect rounded-2xl shadow-sm p-6 flex flex-col justify-between border-l-4 border-rose-500">
+        <!-- KPI Cards Lado a Lado -->
+        <section class="grid grid-cols-3 gap-2 sm:gap-4">
+            <div class="glass-effect rounded-2xl shadow-sm p-3 sm:p-5 flex flex-col justify-between border-l-4 border-rose-500">
                 <div class="flex justify-between items-start">
-                    <h3 class="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Total de Gastos</h3>
-                    <div class="p-2 bg-rose-100 dark:bg-rose-900/30 rounded-lg text-rose-600 dark:text-rose-400">
+                    <h3 class="text-[10px] sm:text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Gastos</h3>
+                    <div class="p-1.5 bg-rose-100 dark:bg-rose-900/30 rounded-lg text-rose-600 text-xs">
                         <i class="fa-solid fa-arrow-trend-up"></i>
                     </div>
                 </div>
-                <div class="mt-4">
-                    <span class="text-3xl font-bold text-slate-800 dark:text-white" id="totalExpensesDisplay">R$ 0,00</span>
-                    <p class="text-sm mt-1 text-slate-500 dark:text-slate-400"><span id="expensePercentDisplay" class="font-medium">0%</span> da renda</p>
+                <div class="mt-2">
+                    <span class="text-sm sm:text-2xl font-bold text-slate-800 dark:text-white block truncate" id="totalExpensesDisplay">R$ 0,00</span>
+                    <p class="text-[10px] sm:text-xs mt-0.5 text-slate-500"><span id="expensePercentDisplay" class="font-medium">0%</span> renda</p>
                 </div>
             </div>
 
-            <div class="glass-effect rounded-2xl shadow-sm p-6 flex flex-col justify-between border-l-4 border-emerald-500">
+            <div class="glass-effect rounded-2xl shadow-sm p-3 sm:p-5 flex flex-col justify-between border-l-4 border-emerald-500">
                 <div class="flex justify-between items-start">
-                    <h3 class="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Sobra Mensal (Poupança)</h3>
-                    <div class="p-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg text-emerald-600 dark:text-emerald-400">
+                    <h3 class="text-[10px] sm:text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Sobra</h3>
+                    <div class="p-1.5 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg text-emerald-600 text-xs">
                         <i class="fa-solid fa-piggy-bank"></i>
                     </div>
                 </div>
-                <div class="mt-4">
-                    <span class="text-3xl font-bold text-slate-800 dark:text-white" id="remainingBalanceDisplay">R$ 0,00</span>
-                    <p class="text-sm mt-1 text-slate-500 dark:text-slate-400"><span id="savingsPercentDisplay" class="font-medium text-emerald-600 dark:text-emerald-400">0%</span> da renda poupada</p>
+                <div class="mt-2">
+                    <span class="text-sm sm:text-2xl font-bold text-slate-800 dark:text-white block truncate" id="remainingBalanceDisplay">R$ 0,00</span>
+                    <p class="text-[10px] sm:text-xs mt-0.5 text-slate-500"><span id="savingsPercentDisplay" class="font-medium text-emerald-600">0%</span> poupada</p>
                 </div>
             </div>
 
-            <div class="glass-effect rounded-2xl shadow-sm p-6 flex flex-col justify-between border-l-4 border-indigo-500">
+            <div class="glass-effect rounded-2xl shadow-sm p-3 sm:p-5 flex flex-col justify-between border-l-4 border-indigo-500">
                 <div class="flex justify-between items-start">
-                    <h3 class="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status do Orçamento</h3>
-                    <div class="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg text-indigo-600 dark:text-indigo-400">
+                    <h3 class="text-[10px] sm:text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</h3>
+                    <div class="p-1.5 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg text-indigo-600 text-xs">
                         <i class="fa-solid fa-scale-balanced"></i>
                     </div>
                 </div>
-                <div class="mt-4 flex items-center gap-3">
-                    <div id="budgetStatusIcon" class="h-10 w-10 rounded-full flex items-center justify-center text-white bg-slate-300">
-                        <i class="fa-solid fa-minus"></i>
+                <div class="mt-2 flex items-center gap-1.5 sm:gap-2">
+                    <div id="budgetStatusIcon" class="h-6 w-6 sm:h-8 sm:w-8 rounded-full flex items-center justify-center text-white bg-slate-300 text-xs shrink-0">
+                        <i class="fa-solid fa-minus text-xs"></i>
                     </div>
-                    <div>
-                        <span class="text-lg font-bold text-slate-800 dark:text-white" id="budgetStatusText">Aguardando dados</span>
-                        <p class="text-xs mt-1 text-slate-500 dark:text-slate-400">Baseado no método 50/30/20</p>
+                    <div class="overflow-hidden">
+                        <span class="text-xs sm:text-sm font-bold text-slate-800 dark:text-white block truncate" id="budgetStatusText">Aguardando</span>
+                        <p class="text-[9px] sm:text-[10px] text-slate-500 truncate">50/30/20</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Seção de Gráficos de Rosca Lado a Lado -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Gráfico 1: Gastos por Categoria -->
-            <div class="glass-effect rounded-2xl shadow-sm p-6">
-                <h2 class="text-lg font-bold text-slate-800 dark:text-white mb-4">Distribuição por Categoria</h2>
-                <div class="relative h-56 w-full flex justify-center items-center">
-                    <canvas id="categoryChart"></canvas>
-                    <div id="chartEmptyState" class="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-slate-900/80 rounded-xl backdrop-blur-sm transition-opacity duration-300">
-                        <p class="text-sm text-slate-500 dark:text-slate-400 text-center">Adicione gastos para<br>ver o gráfico</p>
-                    </div>
-                </div>
+        <!-- 1. LANÇAMENTOS (Movidos para ACIMA dos gráficos) -->
+        <section class="glass-effect rounded-2xl shadow-sm p-4 sm:p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-indigo-500"></i> Lançamentos do Mês
+                </h2>
+                <div class="text-xs sm:text-sm text-slate-500 dark:text-slate-400" id="totalItemsCount">0 itens</div>
             </div>
 
-            <!-- Gráfico 2: Focado na Sobra Mensal / Poupança -->
-            <div class="glass-effect rounded-2xl shadow-sm p-6">
-                <h2 class="text-lg font-bold text-slate-800 dark:text-white mb-4">Composição da Sobra (Poupança)</h2>
-                <div class="relative h-56 w-full flex justify-center items-center">
-                    <canvas id="savingsChart"></canvas>
-                    <div id="savingsChartEmptyState" class="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-slate-900/80 rounded-xl backdrop-blur-sm transition-opacity duration-300">
-                        <p class="text-sm text-slate-500 dark:text-slate-400 text-center">Adicione ganhos e gastos para<br>ver a composição da sobra</p>
+            <form id="addExpenseForm" class="space-y-3 mb-4 bg-slate-50 dark:bg-slate-800/50 p-3 sm:p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+                <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3">
+                    <div class="sm:col-span-4">
+                        <input type="text" id="descInput" required placeholder="Ex: Supermercado" class="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
-            <section class="lg:col-span-2 space-y-6">
-                <div class="glass-effect rounded-2xl shadow-sm p-6 flex flex-col h-full">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                            <i class="fa-solid fa-list-check text-indigo-500"></i> Lançamentos do Mês
-                        </h2>
-                        <div class="text-sm text-slate-500 dark:text-slate-400" id="totalItemsCount">0 itens</div>
-                    </div>
-
-                    <form id="addExpenseForm" class="space-y-3 mb-6 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
-                        <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
-                            <div class="md:col-span-4">
-                                <input type="text" id="descInput" required placeholder="Ex: Supermercado, Aluguel" class="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm text-slate-800 dark:text-white">
-                            </div>
-                            <div class="md:col-span-4">
-                                <div class="flex gap-2">
-                                    <select id="categoryInput" required class="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm text-slate-800 dark:text-white">
-                                        <option value="" disabled selected>Selecione...</option>
-                                    </select>
-                                    <button type="button" id="newCategoryBtn" class="px-2.5 py-2 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-300 dark:hover:bg-slate-600 transition" title="Nova Categoria">
-                                        <i class="fa-solid fa-plus"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="md:col-span-3">
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
-                                        <span class="text-slate-500 text-sm">R$</span>
-                                    </div>
-                                    <input type="number" id="valInput" required min="0.01" step="0.01" placeholder="0.00" class="w-full pl-8 pr-2 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm text-slate-800 dark:text-white">
-                                </div>
-                            </div>
-                            <div class="md:col-span-1 flex items-end">
-                                <button type="submit" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition flex justify-center items-center shadow-md">
-                                    <i class="fa-solid fa-check"></i>
-                                </button>
-                            </div>
+                    <div class="sm:col-span-4">
+                        <div class="flex gap-2">
+                            <select id="categoryInput" required class="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
+                                <option value="" disabled selected>Selecione...</option>
+                            </select>
+                            <button type="button" id="newCategoryBtn" class="px-2.5 py-2 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-300 transition text-xs" title="Nova Categoria">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
                         </div>
-                        <div class="flex items-center gap-2 pt-1">
-                            <input type="checkbox" id="recurrentCheck" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 dark:bg-slate-900 dark:border-slate-700">
-                            <label for="recurrentCheck" class="text-xs text-slate-600 dark:text-slate-400 select-none">Tornar despesa fixa (repetir automaticamente nos próximos meses)</label>
-                        </div>
-                    </form>
-
-                    <div class="flex-grow overflow-y-auto pr-2" style="max-height: 380px;">
-                        <ul id="expensesList" class="space-y-3">
-                            <li class="text-center text-slate-500 dark:text-slate-400 py-8" id="emptyStateMsg">
-                                <i class="fa-solid fa-receipt text-4xl mb-3 opacity-50"></i>
-                                <p>Nenhum gasto adicionado neste mês.</p>
-                            </li>
-                        </ul>
                     </div>
-                </div>
-            </section>
-
-            <section class="space-y-6">
-                <!-- Análise 50/30/20 -->
-                <div class="glass-effect rounded-2xl shadow-sm p-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-lg font-bold text-slate-800 dark:text-white">Análise 50/30/20</h2>
-                        <button id="infoBtn" class="text-slate-400 hover:text-indigo-500 transition-colors">
-                            <i class="fa-solid fa-circle-info"></i>
+                    <div class="sm:col-span-3">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
+                                <span class="text-slate-500 text-xs">R$</span>
+                            </div>
+                            <input type="number" id="valInput" required min="0.01" step="0.01" placeholder="0.00" class="w-full pl-7 pr-2 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
+                        </div>
+                    </div>
+                    <div class="sm:col-span-1 flex items-end">
+                        <button type="submit" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition flex justify-center items-center shadow-md text-xs sm:text-sm">
+                            <i class="fa-solid fa-check"></i>
                         </button>
                     </div>
-                    
-                    <div class="space-y-4">
-                        <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span class="font-medium text-slate-700 dark:text-slate-200">Necessidades (50%)</span>
-                                <span id="needsPercent" class="text-slate-500">0%</span>
-                            </div>
-                            <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5 overflow-hidden">
-                                <div id="needsBar" class="bg-blue-500 h-2.5 rounded-full transition-all duration-500 w-0"></div>
-                            </div>
-                            <div class="flex justify-between text-xs mt-1 text-slate-500">
-                                <span>Gasto: <span id="needsSpent">R$ 0,00</span></span>
-                                <span>Ideal: <span id="needsIdeal">R$ 0,00</span></span>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span class="font-medium text-slate-700 dark:text-slate-200">Desejos (30%)</span>
-                                <span id="wantsPercent" class="text-slate-500">0%</span>
-                            </div>
-                            <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5 overflow-hidden">
-                                <div id="wantsBar" class="bg-amber-400 h-2.5 rounded-full transition-all duration-500 w-0"></div>
-                            </div>
-                            <div class="flex justify-between text-xs mt-1 text-slate-500">
-                                <span>Gasto: <span id="wantsSpent">R$ 0,00</span></span>
-                                <span>Ideal: <span id="wantsIdeal">R$ 0,00</span></span>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span class="font-medium text-slate-700 dark:text-slate-200">Poupança/Dívidas (20%)</span>
-                                <span id="savingsBarPercent" class="text-slate-500">100%</span>
-                            </div>
-                            <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5 overflow-hidden">
-                                <div id="savingBar" class="bg-emerald-500 h-2.5 rounded-full transition-all duration-500 w-full"></div>
-                            </div>
-                            <div class="flex justify-between text-xs mt-1 text-slate-500">
-                                <span>Atual: <span id="savingsCurrent">R$ 0,00</span></span>
-                                <span>Meta min: <span id="savingsIdeal">R$ 0,00</span></span>
-                            </div>
-                        </div>
-                    </div>
                 </div>
+                <div class="flex items-center gap-2 pt-1">
+                    <input type="checkbox" id="recurrentCheck" class="rounded border-slate-300 text-indigo-600 dark:bg-slate-900 dark:border-slate-700">
+                    <label for="recurrentCheck" class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-400 select-none">Tornar despesa fixa (repetir nos próximos meses)</label>
+                </div>
+            </form>
 
-            </section>
-        </div>
-
-        <section class="glass-effect rounded-2xl shadow-sm p-6">
-            <h2 class="text-lg font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-chart-line text-indigo-500"></i> Evolução Diária de Gastos no Mês
-            </h2>
-            <div class="relative h-64 w-full">
-                <canvas id="timelineChart"></canvas>
+            <div class="overflow-y-auto pr-1" style="max-height: 280px;">
+                <ul id="expensesList" class="space-y-2.5">
+                    <li class="text-center text-slate-500 dark:text-slate-400 py-6 text-xs sm:text-sm" id="emptyStateMsg">
+                        <i class="fa-solid fa-receipt text-2xl mb-2 opacity-50"></i>
+                        <p>Nenhum gasto adicionado neste mês.</p>
+                    </li>
+                </ul>
             </div>
         </section>
 
-        <section class="glass-effect rounded-2xl shadow-sm p-6">
-            <h2 class="text-xl font-bold text-slate-800 dark:text-white mb-2 flex items-center gap-2">
+        <!-- 2. GRÁFICOS DE ROSCA LADO A LADO (Mesmo no Celular) -->
+        <section class="grid grid-cols-2 gap-3 sm:gap-6">
+            <div class="glass-effect rounded-2xl shadow-sm p-3 sm:p-6">
+                <h2 class="text-xs sm:text-lg font-bold text-slate-800 dark:text-white mb-2 truncate">Gastos por Categoria</h2>
+                <div class="relative h-40 sm:h-56 w-full flex justify-center items-center">
+                    <canvas id="categoryChart"></canvas>
+                    <div id="chartEmptyState" class="absolute inset-0 flex items-center justify-center bg-white/90 dark:bg-slate-900/90 rounded-xl backdrop-blur-sm transition-opacity duration-300">
+                        <p class="text-[10px] sm:text-sm text-slate-500 text-center px-1">Adicione gastos</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-effect rounded-2xl shadow-sm p-3 sm:p-6">
+                <h2 class="text-xs sm:text-lg font-bold text-slate-800 dark:text-white mb-2 truncate">Composição da Sobra</h2>
+                <div class="relative h-40 sm:h-56 w-full flex justify-center items-center">
+                    <canvas id="savingsChart"></canvas>
+                    <div id="savingsChartEmptyState" class="absolute inset-0 flex items-center justify-center bg-white/90 dark:bg-slate-900/90 rounded-xl backdrop-blur-sm transition-opacity duration-300">
+                        <p class="text-[10px] sm:text-sm text-slate-500 text-center px-1">Defina renda/gastos</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Análise 50/30/20 & Timeline -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <section class="glass-effect rounded-2xl shadow-sm p-4 sm:p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white">Análise 50/30/20</h2>
+                    <button id="infoBtn" class="text-slate-400 hover:text-indigo-500 transition-colors text-sm">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </button>
+                </div>
+                
+                <div class="space-y-3 text-xs sm:text-sm">
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="font-medium text-slate-700 dark:text-slate-200">Necessidades (50%)</span>
+                            <span id="needsPercent" class="text-slate-500">0%</span>
+                        </div>
+                        <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
+                            <div id="needsBar" class="bg-blue-500 h-2 rounded-full transition-all duration-500 w-0"></div>
+                        </div>
+                        <div class="flex justify-between text-[10px] sm:text-xs mt-1 text-slate-500">
+                            <span>Gasto: <span id="needsSpent">R$ 0,00</span></span>
+                            <span>Ideal: <span id="needsIdeal">R$ 0,00</span></span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="font-medium text-slate-700 dark:text-slate-200">Desejos (30%)</span>
+                            <span id="wantsPercent" class="text-slate-500">0%</span>
+                        </div>
+                        <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
+                            <div id="wantsBar" class="bg-amber-400 h-2 rounded-full transition-all duration-500 w-0"></div>
+                        </div>
+                        <div class="flex justify-between text-[10px] sm:text-xs mt-1 text-slate-500">
+                            <span>Gasto: <span id="wantsSpent">R$ 0,00</span></span>
+                            <span>Ideal: <span id="wantsIdeal">R$ 0,00</span></span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="font-medium text-slate-700 dark:text-slate-200">Poupança/Dívidas (20%)</span>
+                            <span id="savingsBarPercent" class="text-slate-500">100%</span>
+                        </div>
+                        <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
+                            <div id="savingBar" class="bg-emerald-500 h-2 rounded-full transition-all duration-500 w-full"></div>
+                        </div>
+                        <div class="flex justify-between text-[10px] sm:text-xs mt-1 text-slate-500">
+                            <span>Atual: <span id="savingsCurrent">R$ 0,00</span></span>
+                            <span>Meta min: <span id="savingsIdeal">R$ 0,00</span></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="glass-effect rounded-2xl shadow-sm p-4 sm:p-6">
+                <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-chart-line text-indigo-500"></i> Evolução Diária
+                </h2>
+                <div class="relative h-48 sm:h-52 w-full">
+                    <canvas id="timelineChart"></canvas>
+                </div>
+            </section>
+        </div>
+
+        <section class="glass-effect rounded-2xl shadow-sm p-4 sm:p-6">
+            <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white mb-1 flex items-center gap-2">
                 <i class="fa-solid fa-lightbulb text-amber-400"></i> Insights & Recomendações
             </h2>
-            <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Sugestões automáticas baseadas no seu perfil de gastos atual.</p>
-            <div id="recommendationsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mb-4">Sugestões baseadas no seu perfil atual.</p>
+            <div id="recommendationsContainer" class="grid grid-cols-1 sm:grid-cols-3 gap-3"></div>
         </section>
 
     </main>
 
     <!-- Modal Editar Lançamento -->
-    <div id="editModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] hidden flex justify-center items-center opacity-0 transition-opacity duration-300">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md p-6 transform scale-95 transition-transform duration-300">
+    <div id="editModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] hidden flex justify-center items-center opacity-0 transition-opacity duration-300 p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md p-5 sm:p-6 transform scale-95 transition-transform duration-300">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-bold text-slate-800 dark:text-white">Editar Lançamento</h3>
-                <button id="closeEditModalBtn" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"><i class="fa-solid fa-xmark text-xl"></i></button>
+                <h3 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white">Editar Lançamento</h3>
+                <button id="closeEditModalBtn" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            <form id="editExpenseForm" class="space-y-4">
+            <form id="editExpenseForm" class="space-y-3">
                 <input type="hidden" id="editIdInput">
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Descrição</label>
-                    <input type="text" id="editDescInput" required class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg outline-none text-sm text-slate-800 dark:text-white">
+                    <label class="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Descrição</label>
+                    <input type="text" id="editDescInput" required class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Categoria</label>
-                    <select id="editCategoryInput" required class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg outline-none text-sm text-slate-800 dark:text-white"></select>
+                    <label class="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Categoria</label>
+                    <select id="editCategoryInput" required class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white"></select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Valor (R$)</label>
-                    <input type="number" id="editValInput" required min="0.01" step="0.01" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg outline-none text-sm text-slate-800 dark:text-white">
+                    <label class="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Valor (R$)</label>
+                    <input type="number" id="editValInput" required min="0.01" step="0.01" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
                 </div>
                 <div class="flex items-center gap-2 pt-1">
-                    <input type="checkbox" id="editRecurrentCheck" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 dark:bg-slate-900 dark:border-slate-700">
+                    <input type="checkbox" id="editRecurrentCheck" class="rounded border-slate-300 text-indigo-600 dark:bg-slate-900 dark:border-slate-700">
                     <label for="editRecurrentCheck" class="text-xs text-slate-600 dark:text-slate-400 select-none">Despesa fixa</label>
                 </div>
-                <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition">Salvar Alterações</button>
+                <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition text-xs sm:text-sm">Salvar Alterações</button>
             </form>
         </div>
     </div>
 
     <!-- Modal Categoria -->
-    <div id="categoryModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] hidden flex justify-center items-center opacity-0 transition-opacity duration-300">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md p-6 transform scale-95 transition-transform duration-300">
+    <div id="categoryModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] hidden flex justify-center items-center opacity-0 transition-opacity duration-300 p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md p-5 sm:p-6 transform scale-95 transition-transform duration-300">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-bold text-slate-800 dark:text-white">Nova Categoria</h3>
-                <button id="closeModalBtn" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"><i class="fa-solid fa-xmark text-xl"></i></button>
+                <h3 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white">Nova Categoria</h3>
+                <button id="closeModalBtn" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            <div class="space-y-4">
+            <div class="space-y-3">
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Nome</label>
-                    <input type="text" id="newCatName" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg outline-none text-sm text-slate-800 dark:text-white">
+                    <label class="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Nome</label>
+                    <input type="text" id="newCatName" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Tipo 50/30/20</label>
-                    <select id="newCatType" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg outline-none text-sm text-slate-800 dark:text-white">
+                    <label class="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Tipo 50/30/20</label>
+                    <select id="newCatType" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
                         <option value="needs">Necessidade (50%)</option>
                         <option value="wants">Desejo/Lazer (30%)</option>
                         <option value="savings">Poupança/Dívida (20%)</option>
                     </select>
                 </div>
-                <button id="saveCategoryBtn" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition">Salvar</button>
+                <button id="saveCategoryBtn" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition text-xs sm:text-sm">Salvar</button>
             </div>
         </div>
     </div>
     
     <!-- Modal Info -->
-    <div id="infoModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] hidden flex justify-center items-center opacity-0 transition-opacity duration-300">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md p-6 relative">
-            <button id="closeInfoBtn" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"><i class="fa-solid fa-xmark text-xl"></i></button>
-            <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-4 border-b pb-2 dark:border-slate-700">O Método 50/30/20</h3>
-            <ul class="space-y-3 text-sm text-slate-600 dark:text-slate-300">
-                <li><strong class="text-blue-500">50% Necessidades:</strong> Moradia, alimentação, contas básicas.</li>
+    <div id="infoModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] hidden flex justify-center items-center opacity-0 transition-opacity duration-300 p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md p-5 sm:p-6 relative">
+            <button id="closeInfoBtn" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-base sm:text-xl font-bold text-slate-800 dark:text-white mb-3 border-b pb-2 dark:border-slate-700">O Método 50/30/20</h3>
+            <ul class="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                <li><strong class="text-blue-500">50% Necessidades:</strong> Moradia, alimentação, contas.</li>
                 <li><strong class="text-amber-500">30% Desejos:</strong> Lazer, streaming, passeios.</li>
                 <li><strong class="text-emerald-500">20% Poupança/Dívidas:</strong> Investimentos e reserva.</li>
             </ul>
@@ -623,30 +617,30 @@
 
             [...expenses].reverse().forEach(exp => {
                 const li = document.createElement('li');
-                li.className = 'expense-item flex justify-between items-center p-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-xl border border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition-colors';
+                li.className = 'expense-item flex justify-between items-center p-2.5 sm:p-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-xl border border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition-colors';
                 
                 let iconClass = 'fa-house text-blue-500';
                 if(exp.type === 'wants') iconClass = 'fa-martini-glass-citrus text-amber-500';
                 if(exp.type === 'savings') iconClass = 'fa-credit-card text-emerald-500';
 
                 li.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center shadow-sm">
-                            <i class="fa-solid ${iconClass}"></i>
+                    <div class="flex items-center gap-2.5 overflow-hidden">
+                        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center shadow-sm shrink-0">
+                            <i class="fa-solid ${iconClass} text-xs sm:text-sm"></i>
                         </div>
-                        <div>
-                            <p class="text-sm font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-2">
-                                ${exp.description} 
-                                ${exp.recurrent ? '<span class="text-[10px] bg-indigo-100 text-indigo-600 dark:bg-indigo-900/40 dark:text-indigo-300 px-1.5 py-0.5 rounded-full font-normal">Fixa</span>' : ''}
+                        <div class="overflow-hidden">
+                            <p class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5 truncate">
+                                <span class="truncate">${exp.description}</span>
+                                ${exp.recurrent ? '<span class="text-[9px] bg-indigo-100 text-indigo-600 dark:bg-indigo-900/40 dark:text-indigo-300 px-1 py-0.2 rounded-full font-normal shrink-0">Fixa</span>' : ''}
                             </p>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">${exp.category}</p>
+                            <p class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate">${exp.category}</p>
                         </div>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <span class="text-sm font-bold text-slate-700 dark:text-slate-300">${formatCurrency(exp.value)}</span>
-                        <div class="flex items-center gap-1.5">
-                            <button onclick="openEditModal('${exp.id}')" class="p-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 transition" title="Editar">✏️</button>
-                            <button onclick="removeExpense('${exp.id}')" class="p-1.5 rounded-lg bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/50 text-rose-600 dark:text-rose-400 transition" title="Remover"><i class="fa-solid fa-trash-can"></i></button>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <span class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300">${formatCurrency(exp.value)}</span>
+                        <div class="flex items-center gap-1">
+                            <button onclick="openEditModal('${exp.id}')" class="p-1 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 text-indigo-600 dark:text-indigo-400 transition text-xs" title="Editar">✏️</button>
+                            <button onclick="removeExpense('${exp.id}')" class="p-1 rounded-lg bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 text-rose-600 dark:text-rose-400 transition text-xs" title="Remover"><i class="fa-solid fa-trash-can"></i></button>
                         </div>
                     </div>
                 `;
@@ -688,14 +682,14 @@
             savingBar.style.width = `${Math.max(Math.min(savingsPct, 100), 0)}%`;
 
             if (dbData.months[currentMonth].expenses.length === 0) {
-                budgetStatusText.textContent = "Aguardando dados";
-                budgetStatusIcon.className = "h-10 w-10 rounded-full flex items-center justify-center text-white bg-slate-300";
+                budgetStatusText.textContent = "Aguardando";
+                budgetStatusIcon.className = "h-6 w-6 sm:h-8 sm:w-8 rounded-full flex items-center justify-center text-white bg-slate-300 text-xs shrink-0";
             } else if (stats.total > income) {
-                budgetStatusText.textContent = "Orçamento Estourado";
-                budgetStatusIcon.className = "h-10 w-10 rounded-full flex items-center justify-center text-white bg-rose-500";
+                budgetStatusText.textContent = "Estourado";
+                budgetStatusIcon.className = "h-6 w-6 sm:h-8 sm:w-8 rounded-full flex items-center justify-center text-white bg-rose-500 text-xs shrink-0";
             } else {
                 budgetStatusText.textContent = "Em dia";
-                budgetStatusIcon.className = "h-10 w-10 rounded-full flex items-center justify-center text-white bg-emerald-500";
+                budgetStatusIcon.className = "h-6 w-6 sm:h-8 sm:w-8 rounded-full flex items-center justify-center text-white bg-emerald-500 text-xs shrink-0";
             }
         }
 
@@ -724,8 +718,8 @@
                     type: 'doughnut',
                     data: { labels, datasets: [{ data, backgroundColor: colors, borderWidth: 0 }] },
                     options: {
-                        responsive: true, maintainAspectRatio: false, cutout: '65%',
-                        plugins: { legend: { position: 'right', labels: { color: textColor, font: { size: 11 }, usePointStyle: true } } }
+                        responsive: true, maintainAspectRatio: false, cutout: '60%',
+                        plugins: { legend: { position: 'bottom', labels: { color: textColor, font: { size: 9 }, usePointStyle: true, boxWidth: 6 } } }
                     }
                 });
             }
@@ -735,8 +729,7 @@
             const ctx = document.getElementById('savingsChart').getContext('2d');
             const emptyState = document.getElementById('savingsChartEmptyState');
             
-            // Vamos decompor a renda ou a sobra em alocações (Ex: Reserva, Investimentos, Caixa Livre, etc.)
-            let savingsLabels = ['Sobra Livre', 'Meta Investimentos (20%)'];
+            let savingsLabels = ['Sobra Livre', 'Meta Invest.'];
             let savingsData = [Math.max(stats.remaining, 0), Math.max(stats.income * 0.2, 0)];
 
             if (stats.income <= 0 && stats.total <= 0) {
@@ -756,17 +749,10 @@
             } else {
                 savingsChartInstance = new Chart(ctx, {
                     type: 'doughnut',
-                    data: {
-                        labels: savingsLabels,
-                        datasets: [{
-                            data: savingsData,
-                            backgroundColor: savingsColors,
-                            borderWidth: 0
-                        }]
-                    },
+                    data: { labels: savingsLabels, datasets: [{ data: savingsData, backgroundColor: savingsColors, borderWidth: 0 }] },
                     options: {
-                        responsive: true, maintainAspectRatio: false, cutout: '65%',
-                        plugins: { legend: { position: 'right', labels: { color: textColor, font: { size: 11 }, usePointStyle: true } } }
+                        responsive: true, maintainAspectRatio: false, cutout: '60%',
+                        plugins: { legend: { position: 'bottom', labels: { color: textColor, font: { size: 9 }, usePointStyle: true, boxWidth: 6 } } }
                     }
                 });
             }
@@ -816,8 +802,8 @@
                         responsive: true, maintainAspectRatio: false,
                         plugins: { legend: { display: false } },
                         scales: {
-                            x: { ticks: { color: textColor }, grid: { display: false } },
-                            y: { ticks: { color: textColor }, grid: { color: isDark ? '#334155' : '#e2e8f0' } }
+                            x: { ticks: { color: textColor, font: { size: 9 } }, grid: { display: false } },
+                            y: { ticks: { color: textColor, font: { size: 9 } }, grid: { color: isDark ? '#334155' : '#e2e8f0' } }
                         }
                     }
                 });
@@ -827,27 +813,27 @@
         function generateRecommendations(stats) {
             recommendationsContainer.innerHTML = '';
             if (dbData.months[currentMonth].expenses.length === 0) {
-                recommendationsContainer.innerHTML = `<div class="col-span-3 text-center text-slate-400 text-sm py-4">Adicione gastos para ver recomendações.</div>`;
+                recommendationsContainer.innerHTML = `<div class="col-span-3 text-center text-slate-400 text-xs py-3">Adicione gastos para ver dicas.</div>`;
                 return;
             }
 
             let tips = [{
                 icon: 'fa-check', color: 'text-emerald-500', bg: 'bg-emerald-100 dark:bg-emerald-900/30',
                 title: 'Controle Ativo',
-                desc: 'Continue registrando seus gastos regularmente para manter suas finanças sob total controle neste mês.'
+                desc: 'Continue registrando seus gastos para manter suas finanças sob total controle.'
             }];
 
-            tips.slice(0, 3).forEach(tip => {
+            tips.forEach(tip => {
                 const div = document.createElement('div');
-                div.className = 'p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50';
+                div.className = 'p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50';
                 div.innerHTML = `
-                    <div class="flex items-center gap-3 mb-2">
-                        <div class="w-8 h-8 rounded-full ${tip.bg} flex items-center justify-center">
-                            <i class="fa-solid ${tip.icon} ${tip.color} text-sm"></i>
+                    <div class="flex items-center gap-2 mb-1">
+                        <div class="w-6 h-6 rounded-full ${tip.bg} flex items-center justify-center shrink-0">
+                            <i class="fa-solid ${tip.icon} ${tip.color} text-xs"></i>
                         </div>
-                        <h3 class="font-semibold text-slate-800 dark:text-slate-200 text-sm">${tip.title}</h3>
+                        <h3 class="font-semibold text-slate-800 dark:text-slate-200 text-xs">${tip.title}</h3>
                     </div>
-                    <p class="text-xs text-slate-600 dark:text-slate-400">${tip.desc}</p>
+                    <p class="text-[11px] text-slate-600 dark:text-slate-400">${tip.desc}</p>
                 `;
                 recommendationsContainer.appendChild(div);
             });
@@ -878,10 +864,10 @@
                         updateDashboard();
                         alert("Dados importados com sucesso!");
                     } else {
-                        alert("Arquivo de backup inválido.");
+                        alert("Arquivo inválido.");
                     }
                 } catch(err) {
-                    alert("Erro ao ler o arquivo JSON.");
+                    alert("Erro ao ler JSON.");
                 }
             };
             reader.readAsText(file);
@@ -949,7 +935,7 @@
                 document.body.classList.toggle('dark-mode');
                 document.documentElement.classList.toggle('dark');
                 const isDark = document.body.classList.contains('dark-mode');
-                icon.className = isDark ? "fa-solid fa-sun text-lg" : "fa-solid fa-moon text-lg";
+                icon.className = isDark ? "fa-solid fa-sun text-base" : "fa-solid fa-moon text-base";
                 updateDashboard();
             });
         }
