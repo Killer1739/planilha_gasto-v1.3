@@ -87,6 +87,9 @@
                     <i class="fa-solid fa-upload"></i>
                     <input type="file" id="importFile" accept=".json" class="hidden">
                 </label>
+                <button id="privacyToggle" title="Modo Privacidade" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 transition-colors text-slate-600 dark:text-slate-300">
+                    <i class="fa-solid fa-eye text-base" id="privacyIcon"></i>
+                </button>
                 <button id="themeToggle" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 transition-colors text-slate-600 dark:text-slate-300">
                     <i class="fa-solid fa-moon text-base" id="themeIcon"></i>
                 </button>
@@ -175,13 +178,21 @@
             </div>
         </section>
 
-        <!-- 1. LANÇAMENTOS -->
+        <!-- 1. LANÇAMENTOS COM SUB-ABAS (Extrato / Raio-X de Pagamentos) -->
         <section class="glass-effect rounded-2xl shadow-sm p-4 sm:p-6">
-            <div class="flex justify-between items-center mb-4">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
                 <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
                     <i class="fa-solid fa-list-check text-indigo-500"></i> Lançamentos do Mês
                 </h2>
-                <div class="text-xs sm:text-sm text-slate-500 dark:text-slate-400" id="totalItemsCount">0 itens</div>
+                
+                <!-- Sub-Abas e Contador -->
+                <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+                    <div class="text-xs sm:text-sm text-slate-500 dark:text-slate-400" id="totalItemsCount">0 itens</div>
+                    <div class="flex gap-1 bg-slate-200 dark:bg-slate-700/60 p-1 rounded-xl text-xs font-semibold">
+                        <button type="button" id="subTabExtrato" class="px-3 py-1 rounded-lg bg-indigo-600 text-white transition shadow-sm">Extrato</button>
+                        <button type="button" id="subTabRaioX" class="px-3 py-1 rounded-lg text-slate-600 dark:text-slate-300 transition">Raio-X Pagamentos</button>
+                    </div>
+                </div>
             </div>
 
             <!-- Seletor de Tipo (Despesas / Ganhos) - Aba Despesas em Vermelho -->
@@ -247,20 +258,28 @@
                     <label for="recurrentCheck" class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-400 select-none">Tornar despesa fixa (repetir nos próximos meses)</label>
                 </div>
 
-                <!-- Busca Rápida (Logo abaixo de despesa fixa) -->
-                <div class="flex items-center gap-2 mt-2 pt-2 border-t border-slate-200/60 dark:border-slate-700/60">
+                <!-- Busca Rápida -->
+                <div class="flex items-center gap-2 mt-2 pt-2 border-t border-slate-200/60 dark:border-slate-700/60" id="searchWrapper">
                     <span class="text-xs">🔍</span>
                     <input type="text" id="searchInput" placeholder="Buscar lançamento..." class="w-full sm:w-64 px-2.5 py-1 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg outline-none text-xs text-slate-800 dark:text-white">
                 </div>
             </form>
 
-            <div class="overflow-y-auto pr-1" style="max-height: 280px;">
+            <!-- Visualização 1: Extrato de Lançamentos -->
+            <div id="extratoView" class="overflow-y-auto pr-1" style="max-height: 280px;">
                 <ul id="expensesList" class="space-y-2.5">
                     <li class="text-center text-slate-500 dark:text-slate-400 py-6 text-xs sm:text-sm" id="emptyStateMsg">
                         <i class="fa-solid fa-receipt text-2xl mb-2 opacity-50"></i>
                         <p>Nenhum lançamento adicionado neste mês.</p>
                     </li>
                 </ul>
+            </div>
+
+            <!-- Visualização 2: Raio-X por Forma de Pagamento -->
+            <div id="raioXView" class="hidden space-y-3 py-2">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="raioXCardsContainer">
+                    <!-- Preenchido via JS -->
+                </div>
             </div>
         </section>
 
@@ -482,7 +501,10 @@
     <script>
         let currentMonth = new Date().toISOString().slice(0, 7);
         let activeTab = 'expense';
+        let activeSubTab = 'extrato'; // 'extrato' ou 'raiox'
+        let isPrivacyMode = false;
         let isTimeInputFocused = false;
+
         let dbData = JSON.parse(localStorage.getItem('findash_db')) || {
             categories: {
                 'Moradia': 'needs', 'Alimentação': 'needs', 'Transporte': 'needs',
@@ -531,7 +553,10 @@
         const budgetStatusText = document.getElementById('budgetStatusText');
         const recommendationsContainer = document.getElementById('recommendationsContainer');
 
-        const formatCurrency = (val) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
+        const formatCurrency = (val) => {
+            if (isPrivacyMode) return 'R$ ••••••';
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
+        };
         const generateId = () => Math.random().toString(36).substr(2, 9);
 
         // Sistema de Notificações Neon com Visual Viewport e deslocamento vertical para cima (~1.5cm)
@@ -612,10 +637,44 @@
                 renderTransactionsList();
             });
 
+            // Sub-Abas Lançamentos (Extrato / Raio-X)
+            const subTabExtrato = document.getElementById('subTabExtrato');
+            const subTabRaioX = document.getElementById('subTabRaioX');
+            const extratoView = document.getElementById('extratoView');
+            const raioXView = document.getElementById('raioXView');
+            const searchWrapper = document.getElementById('searchWrapper');
+
+            subTabExtrato.addEventListener('click', () => {
+                activeSubTab = 'extrato';
+                subTabExtrato.className = "px-3 py-1 rounded-lg bg-indigo-600 text-white transition shadow-sm";
+                subTabRaioX.className = "px-3 py-1 rounded-lg text-slate-600 dark:text-slate-300 transition";
+                extratoView.classList.remove('hidden');
+                searchWrapper.style.display = 'flex';
+                raioXView.classList.add('hidden');
+            });
+
+            subTabRaioX.addEventListener('click', () => {
+                activeSubTab = 'raiox';
+                subTabRaioX.className = "px-3 py-1 rounded-lg bg-indigo-600 text-white transition shadow-sm";
+                subTabExtrato.className = "px-3 py-1 rounded-lg text-slate-600 dark:text-slate-300 transition";
+                extratoView.classList.add('hidden');
+                searchWrapper.style.display = 'none';
+                raioXView.classList.remove('hidden');
+                renderRaioXPaymentMethods();
+            });
+
             document.getElementById('prevMonthBtn').addEventListener('click', () => changeMonthOffset(-1));
             document.getElementById('nextMonthBtn').addEventListener('click', () => changeMonthOffset(1));
             document.getElementById('editIncomeBtn').addEventListener('click', editTotalIncome);
             document.getElementById('editAccountBalanceBtn').addEventListener('click', editAccountBalance);
+
+            // Botão Modo Privacidade
+            document.getElementById('privacyToggle').addEventListener('click', () => {
+                isPrivacyMode = !isPrivacyMode;
+                const privacyIcon = document.getElementById('privacyIcon');
+                privacyIcon.className = isPrivacyMode ? "fa-solid fa-eye-slash text-base text-indigo-500" : "fa-solid fa-eye text-base";
+                updateDashboard();
+            });
 
             const tabExpense = document.getElementById('tabExpense');
             const tabGain = document.getElementById('tabGain');
@@ -974,6 +1033,9 @@
         function updateDashboard() {
             ensureMonthExists(currentMonth);
             renderTransactionsList();
+            if (activeSubTab === 'raiox') {
+                renderRaioXPaymentMethods();
+            }
             const stats = calculateStats();
             updateKPIs(stats);
             update503020(stats);
@@ -1011,7 +1073,6 @@
             
             const allItems = [...expenses, ...gains].sort((a, b) => b.createdAt - a.createdAt);
 
-            // Filtragem por busca rápida
             const query = searchInput.value.toLowerCase().trim();
             const filteredItems = allItems.filter(item => {
                 if (!query) return true;
@@ -1077,6 +1138,60 @@
                 `;
                 expensesList.appendChild(li);
             });
+        }
+
+        function renderRaioXPaymentMethods() {
+            const container = document.getElementById('raioXCardsContainer');
+            container.innerHTML = '';
+
+            const m = dbData.months[currentMonth];
+            const expenses = m.expenses || [];
+            
+            const totals = {
+                'Pix': { total: 0, count: 0, icon: 'fa-bolt', color: 'text-teal-500', bg: 'bg-teal-100 dark:bg-teal-900/35' },
+                'Cartão de Crédito': { total: 0, count: 0, icon: 'fa-credit-card', color: 'text-violet-500', bg: 'bg-violet-100 dark:bg-violet-900/35' },
+                'Débito': { total: 0, count: 0, icon: 'fa-wallet', color: 'text-blue-500', bg: 'bg-blue-100 dark:bg-blue-900/35' },
+                'Dinheiro': { total: 0, count: 0, icon: 'fa-money-bill-wave', color: 'text-emerald-500', bg: 'bg-emerald-100 dark:bg-emerald-900/35' }
+            };
+
+            let totalExpensesSum = 0;
+            expenses.forEach(e => {
+                const method = e.paymentMethod || 'Pix';
+                if (totals[method]) {
+                    totals[method].total += e.value;
+                    totals[method].count += 1;
+                    totalExpensesSum += e.value;
+                }
+            });
+
+            for (let method in totals) {
+                const data = totals[method];
+                const pct = totalExpensesSum > 0 ? ((data.total / totalExpensesSum) * 100).toFixed(1) : 0;
+
+                const card = document.createElement('div');
+                card.className = 'p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50 flex flex-col justify-between';
+                card.innerHTML = `
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-lg ${data.bg} flex items-center justify-center shrink-0">
+                                <i class="fa-solid ${data.icon} ${data.color} text-sm"></i>
+                            </div>
+                            <span class="font-semibold text-xs sm:text-sm text-slate-800 dark:text-white">${method}</span>
+                        </div>
+                        <span class="text-[11px] font-medium text-slate-500">${data.count} ite${data.count !== 1 ? 'ns' : 'm'}</span>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-baseline mb-1">
+                            <span class="text-sm sm:text-base font-bold text-rose-600 dark:text-rose-400">${formatCurrency(data.total)}</span>
+                            <span class="text-xs font-semibold text-slate-500">${pct}% dos gastos</span>
+                        </div>
+                        <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden">
+                            <div class="bg-indigo-600 h-1.5 rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            }
         }
 
         function updateKPIs(stats) {
