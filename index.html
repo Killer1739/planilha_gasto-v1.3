@@ -175,7 +175,7 @@
             </div>
         </section>
 
-        <!-- 1. LANÇAMENTOS (Com Seletor Despesas / Ganhos e Hora Bem Justa) -->
+        <!-- 1. LANÇAMENTOS (Com Data abaixo da descrição e Horário ao lado) -->
         <section class="glass-effect rounded-2xl shadow-sm p-4 sm:p-6">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
@@ -191,46 +191,56 @@
             </div>
 
             <form id="addExpenseForm" class="space-y-3 mb-4 bg-slate-50 dark:bg-slate-800/50 p-3 sm:p-4 rounded-xl border border-slate-200 dark:border-slate-700">
-                <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3">
-                    <div class="sm:col-span-3">
+                <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3 items-start">
+                    <!-- Coluna Esquerda: Descrição em cima, Data e Horário logo abaixo -->
+                    <div class="sm:col-span-4 space-y-2">
                         <input type="text" id="descInput" required placeholder="Ex: Supermercado" class="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
+                        
+                        <div class="grid grid-cols-2 gap-1.5">
+                            <input type="date" id="dateInput" required title="Data do Lançamento" class="w-full px-1.5 py-1.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg outline-none text-[11px] text-slate-800 dark:text-white cursor-pointer">
+                            <input type="time" step="1" id="timeInput" required title="Horário do Lançamento" class="w-full px-1.5 py-1.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg outline-none text-[11px] text-slate-800 dark:text-white cursor-pointer text-center">
+                        </div>
                     </div>
-                    <div class="sm:col-span-2">
-                        <div class="flex gap-2">
-                            <select id="categoryInput" required class="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
-                                <option value="" disabled selected>Categoria...</option>
+
+                    <!-- Coluna Direita: Categoria, Pagamento, Valor e Botão -->
+                    <div class="sm:col-span-8 grid grid-cols-1 sm:grid-cols-12 gap-2 items-center">
+                        <div class="sm:col-span-4">
+                            <div class="flex gap-1.5">
+                                <select id="categoryInput" required class="w-full px-2.5 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg outline-none text-xs text-slate-800 dark:text-white">
+                                    <option value="" disabled selected>Categoria...</option>
+                                </select>
+                                <button type="button" id="newCategoryBtn" class="px-2 py-2 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-300 transition text-xs shrink-0" title="Nova Categoria">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="sm:col-span-3" id="paymentMethodWrapper">
+                            <select id="paymentMethodInput" required class="w-full px-2.5 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg outline-none text-xs text-slate-800 dark:text-white">
+                                <option value="Pix">Pix</option>
+                                <option value="Cartão de Crédito">Cartão Crédito</option>
+                                <option value="Débito">Débito</option>
+                                <option value="Dinheiro">Dinheiro</option>
                             </select>
-                            <button type="button" id="newCategoryBtn" class="px-2 py-2 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-300 transition text-xs shrink-0" title="Nova Categoria">
-                                <i class="fa-solid fa-plus"></i>
+                        </div>
+
+                        <div class="sm:col-span-4">
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
+                                    <span class="text-slate-500 text-xs">R$</span>
+                                </div>
+                                <input type="number" id="valInput" required min="0.01" step="0.01" placeholder="0.00" class="w-full pl-7 pr-2 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
+                            </div>
+                        </div>
+
+                        <div class="sm:col-span-1">
+                            <button type="submit" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition flex justify-center items-center shadow-md text-xs sm:text-sm" title="Confirmar Lançamento">
+                                <i class="fa-solid fa-check"></i>
                             </button>
                         </div>
                     </div>
-                    <div class="sm:col-span-2" id="paymentMethodWrapper">
-                        <select id="paymentMethodInput" required class="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
-                            <option value="Pix">Pix</option>
-                            <option value="Cartão de Crédito">Cartão Crédito</option>
-                            <option value="Débito">Débito</option>
-                            <option value="Dinheiro">Dinheiro</option>
-                        </select>
-                    </div>
-                    <!-- Horário Bem Justo -->
-                    <div class="sm:col-span-1">
-                        <input type="time" step="1" id="timeInput" required title="Horário do Lançamento" class="w-full px-1 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg outline-none text-[11px] text-slate-800 dark:text-white cursor-pointer text-center">
-                    </div>
-                    <div class="sm:col-span-3">
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
-                                <span class="text-slate-500 text-xs">R$</span>
-                            </div>
-                            <input type="number" id="valInput" required min="0.01" step="0.01" placeholder="0.00" class="w-full pl-7 pr-2 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
-                        </div>
-                    </div>
-                    <div class="sm:col-span-1 flex items-end">
-                        <button type="submit" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition flex justify-center items-center shadow-md text-xs sm:text-sm">
-                            <i class="fa-solid fa-check"></i>
-                        </button>
-                    </div>
                 </div>
+
                 <div class="flex items-center gap-2 pt-1" id="recurrentWrapper">
                     <input type="checkbox" id="recurrentCheck" class="rounded border-slate-300 text-indigo-600 dark:bg-slate-900 dark:border-slate-700">
                     <label for="recurrentCheck" class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-400 select-none">Tornar despesa fixa (repetir nos próximos meses)</label>
@@ -401,9 +411,15 @@
                         <option value="Dinheiro">Dinheiro</option>
                     </select>
                 </div>
-                <div>
-                    <label class="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Horário</label>
-                    <input type="time" step="1" id="editTimeInput" required class="w-full px-2 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg outline-none text-xs text-slate-800 dark:text-white">
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Data</label>
+                        <input type="date" id="editDateInput" required class="w-full px-2 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg outline-none text-xs text-slate-800 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Horário</label>
+                        <input type="time" step="1" id="editTimeInput" required class="w-full px-2 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg outline-none text-xs text-slate-800 dark:text-white">
+                    </div>
                 </div>
                 <div>
                     <label class="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Valor (R$)</label>
@@ -481,6 +497,7 @@
         const expensesList = document.getElementById('expensesList');
         const addExpenseForm = document.getElementById('addExpenseForm');
         const timeInput = document.getElementById('timeInput');
+        const dateInput = document.getElementById('dateInput');
         const emptyStateMsg = document.getElementById('emptyStateMsg');
         
         const totalExpensesDisplay = document.getElementById('totalExpensesDisplay');
@@ -561,6 +578,7 @@
 
         function init() {
             currentMonthInput.value = currentMonth;
+            setDefaultDateForCurrentMonth();
             ensureMonthExists(currentMonth);
 
             // Relógio automático ao vivo no campo de horário
@@ -576,6 +594,7 @@
 
             currentMonthInput.addEventListener('change', (e) => {
                 currentMonth = e.target.value;
+                setDefaultDateForCurrentMonth();
                 ensureMonthExists(currentMonth);
                 updateDashboard();
             });
@@ -623,6 +642,15 @@
             setupModals();
             setupTheme();
             updateDashboard();
+        }
+
+        function setDefaultDateForCurrentMonth() {
+            const todayStr = new Date().toISOString().slice(0, 10);
+            if (todayStr.startsWith(currentMonth)) {
+                dateInput.value = todayStr;
+            } else {
+                dateInput.value = `${currentMonth}-01`;
+            }
         }
 
         function ensureMonthExists(monthStr) {
@@ -679,6 +707,7 @@
             else if (month < 1) { month = 12; year--; }
             currentMonth = `${year}-${String(month).padStart(2, '0')}`;
             currentMonthInput.value = currentMonth;
+            setDefaultDateForCurrentMonth();
             ensureMonthExists(currentMonth);
             updateDashboard();
         }
@@ -760,11 +789,15 @@
             const desc = document.getElementById('descInput').value.trim();
             const cat = document.getElementById('categoryInput').value;
             const paymentMethod = document.getElementById('paymentMethodInput').value;
-            const timeVal = document.getElementById('timeInput').value || new Date().toTimeString().slice(0, 8);
+            const dateVal = dateInput.value || `${currentMonth}-01`;
+            const timeVal = timeInput.value || new Date().toTimeString().slice(0, 8);
             const val = parseFloat(document.getElementById('valInput').value);
             const recurrent = document.getElementById('recurrentCheck').checked;
 
             if (!desc || !cat || isNaN(val) || val <= 0) return;
+
+            const targetMonth = dateVal.slice(0, 7);
+            ensureMonthExists(targetMonth);
 
             const expense = {
                 id: generateId(),
@@ -772,26 +805,22 @@
                 description: desc,
                 category: cat,
                 paymentMethod: paymentMethod,
+                date: dateVal,
                 time: timeVal,
                 value: val,
                 type: dbData.categories[cat] || 'wants',
                 recurrent: recurrent,
-                date: `${currentMonth}-${String(new Date().getDate()).padStart(2, '0')}`,
                 createdAt: Date.now()
             };
 
-            dbData.months[currentMonth].expenses.push(expense);
+            dbData.months[targetMonth].expenses.push(expense);
             saveDB();
             
-            let pool = [
-                "Despesa computada no painel. Olho vivo no caixa! 📊",
-                "Saída de caixa registrada com sucesso. 🛡️",
-                "Mais um lançamento na conta. Mantendo o ritmo! ⚡"
-            ];
-            showNotification('expense', `Despesa: -${formatCurrency(val)}`, pool[Math.floor(Math.random() * pool.length)]);
+            showNotification('expense', `Despesa: -${formatCurrency(val)}`, "Despesa computada no painel. Olho vivo no caixa! 📊");
 
             document.getElementById('descInput').value = '';
             document.getElementById('valInput').value = '';
+            setDefaultDateForCurrentMonth();
             isTimeInputFocused = false;
             document.getElementById('descInput').focus();
             updateDashboard();
@@ -800,29 +829,34 @@
         function addGain() {
             const desc = document.getElementById('descInput').value.trim();
             const cat = document.getElementById('categoryInput').value;
-            const timeVal = document.getElementById('timeInput').value || new Date().toTimeString().slice(0, 8);
+            const dateVal = dateInput.value || `${currentMonth}-01`;
+            const timeVal = timeInput.value || new Date().toTimeString().slice(0, 8);
             const val = parseFloat(document.getElementById('valInput').value);
 
             if (!desc || !cat || isNaN(val) || val <= 0) return;
+
+            const targetMonth = dateVal.slice(0, 7);
+            ensureMonthExists(targetMonth);
 
             const gain = {
                 id: generateId(),
                 typeItem: 'gain',
                 description: desc,
                 category: cat,
+                date: dateVal,
                 time: timeVal,
                 value: val,
-                date: `${currentMonth}-${String(new Date().getDate()).padStart(2, '0')}`,
                 createdAt: Date.now()
             };
 
-            dbData.months[currentMonth].gains.push(gain);
+            dbData.months[targetMonth].gains.push(gain);
             saveDB();
             
             showNotification('gain', `Ganho: +${formatCurrency(val)}`, "Mais um resultado para a conta! O motor tá girando forte. 🚀");
 
             document.getElementById('descInput').value = '';
             document.getElementById('valInput').value = '';
+            setDefaultDateForCurrentMonth();
             isTimeInputFocused = false;
             document.getElementById('descInput').focus();
             updateDashboard();
@@ -830,10 +864,18 @@
 
         window.removeItem = function(id, typeItem) {
             if (confirm("Tem certeza que deseja remover este lançamento?")) {
-                if (typeItem === 'gain') {
-                    dbData.months[currentMonth].gains = dbData.months[currentMonth].gains.filter(g => g.id !== id);
-                } else {
-                    dbData.months[currentMonth].expenses = dbData.months[currentMonth].expenses.filter(e => e.id !== id);
+                let found = false;
+                for (let mStr in dbData.months) {
+                    if (typeItem === 'gain') {
+                        const len = dbData.months[mStr].gains.length;
+                        dbData.months[mStr].gains = dbData.months[mStr].gains.filter(g => g.id !== id);
+                        if (dbData.months[mStr].gains.length < len) found = true;
+                    } else {
+                        const len = dbData.months[mStr].expenses.length;
+                        dbData.months[mStr].expenses = dbData.months[mStr].expenses.filter(e => e.id !== id);
+                        if (dbData.months[mStr].expenses.length < len) found = true;
+                    }
+                    if (found) break;
                 }
                 saveDB();
                 updateDashboard();
@@ -841,20 +883,25 @@
         }
 
         window.openEditModal = function(id) {
-            const m = dbData.months[currentMonth];
-            const exp = (m.expenses || []).find(e => e.id === id);
-            const gain = !exp ? (m.gains || []).find(g => g.id === id) : null;
-            const item = exp || gain;
-            if (!item) return;
+            let foundItem = null;
+            let foundType = null;
+            for (let mStr in dbData.months) {
+                const exp = (dbData.months[mStr].expenses || []).find(e => e.id === id);
+                if (exp) { foundItem = exp; foundType = 'expense'; break; }
+                const gain = (dbData.months[mStr].gains || []).find(g => g.id === id);
+                if (gain) { foundItem = gain; foundType = 'gain'; break; }
+            }
+            if (!foundItem) return;
 
-            document.getElementById('editIdInput').value = item.id;
-            document.getElementById('editTypeInput').value = item.typeItem || 'expense';
-            document.getElementById('editDescInput').value = item.description;
-            document.getElementById('editValInput').value = item.value;
-            document.getElementById('editTimeInput').value = item.time || '00:00:00';
+            document.getElementById('editIdInput').value = foundItem.id;
+            document.getElementById('editTypeInput').value = foundType;
+            document.getElementById('editDescInput').value = foundItem.description;
+            document.getElementById('editValInput').value = foundItem.value;
+            document.getElementById('editDateInput').value = foundItem.date || `${currentMonth}-01`;
+            document.getElementById('editTimeInput').value = foundItem.time || '00:00:00';
 
             const editCat = document.getElementById('editCategoryInput');
-            if (item.typeItem === 'gain') {
+            if (foundType === 'gain') {
                 editCat.innerHTML = '<option value="Vendas">Vendas</option><option value="Ganho Extra">Ganho Extra</option>';
                 document.getElementById('editPaymentWrapper').style.display = 'none';
                 document.getElementById('editRecurrentWrapper').style.display = 'none';
@@ -862,10 +909,10 @@
                 setupCategorySelect();
                 document.getElementById('editPaymentWrapper').style.display = 'block';
                 document.getElementById('editRecurrentWrapper').style.display = 'flex';
-                document.getElementById('editPaymentMethodInput').value = item.paymentMethod || 'Pix';
-                document.getElementById('editRecurrentCheck').checked = item.recurrent || false;
+                document.getElementById('editPaymentMethodInput').value = foundItem.paymentMethod || 'Pix';
+                document.getElementById('editRecurrentCheck').checked = foundItem.recurrent || false;
             }
-            editCat.value = item.category;
+            editCat.value = foundItem.category;
 
             const modal = document.getElementById('editModal');
             modal.classList.remove('hidden');
@@ -939,8 +986,10 @@
                 let iconClass = 'fa-arrow-trend-up text-emerald-500';
                 let valColor = 'text-emerald-600 dark:text-emerald-400';
                 let sign = '+ ';
+                let dateFormatted = item.date ? item.date.split('-').reverse().join('/') : '';
                 let timeStr = item.time ? ` • 🕒 ${item.time.slice(0, 5)}` : '';
-                let subtitle = `${item.category} (Ganho)${timeStr}`;
+                let dateTimeStr = dateFormatted ? `📅 ${dateFormatted}${timeStr}` : timeStr;
+                let subtitle = `${item.category} (Ganho) • ${dateTimeStr}`;
 
                 if (item.typeItem === 'expense') {
                     sign = '- ';
@@ -948,7 +997,7 @@
                     iconClass = 'fa-house text-blue-500';
                     if(item.type === 'wants') iconClass = 'fa-martini-glass-citrus text-amber-500';
                     if(item.type === 'savings') iconClass = 'fa-credit-card text-emerald-500';
-                    subtitle = `${item.category} • <span class="font-medium text-slate-600 dark:text-slate-300">${item.paymentMethod || 'Pix'}</span>${timeStr}`;
+                    subtitle = `${item.category} • <span class="font-medium text-slate-600 dark:text-slate-300">${item.paymentMethod || 'Pix'}</span> • ${dateTimeStr}`;
                 }
 
                 li.innerHTML = `
@@ -1244,6 +1293,7 @@
                         dbData = parsed;
                         saveDB();
                         setupCategorySelect();
+                        setDefaultDateForCurrentMonth();
                         ensureMonthExists(currentMonth);
                         updateDashboard();
                         alert("Dados importados com sucesso!");
@@ -1299,39 +1349,51 @@
                 const typeItem = document.getElementById('editTypeInput').value;
                 const desc = document.getElementById('editDescInput').value.trim();
                 const cat = document.getElementById('editCategoryInput').value;
+                const dateVal = document.getElementById('editDateInput').value;
                 const timeVal = document.getElementById('editTimeInput').value;
                 const val = parseFloat(document.getElementById('editValInput').value);
 
-                const m = dbData.months[currentMonth];
-                if (typeItem === 'gain') {
-                    const list = m.gains || [];
-                    const index = list.findIndex(g => g.id === id);
-                    if (index !== -1 && desc && cat && !isNaN(val)) {
-                        list[index] = { ...list[index], description: desc, category: cat, time: timeVal, value: val };
-                        saveDB();
-                        editModal.classList.add('hidden');
-                        updateDashboard();
+                // Remover o item de onde quer que ele esteja e recolocar na data certa
+                let itemFound = null;
+                for (let mStr in dbData.months) {
+                    if (typeItem === 'gain') {
+                        const idx = (dbData.months[mStr].gains || []).findIndex(g => g.id === id);
+                        if (idx !== -1) {
+                            itemFound = dbData.months[mStr].gains.splice(idx, 1)[0];
+                            break;
+                        }
+                    } else {
+                        const idx = (dbData.months[mStr].expenses || []).findIndex(ex => ex.id === id);
+                        if (idx !== -1) {
+                            itemFound = dbData.months[mStr].expenses.splice(idx, 1)[0];
+                            break;
+                        }
                     }
-                } else {
-                    const list = m.expenses || [];
-                    const index = list.findIndex(ex => ex.id === id);
-                    const paymentMethod = document.getElementById('editPaymentMethodInput').value;
-                    const recurrent = document.getElementById('editRecurrentCheck').checked;
-                    if (index !== -1 && desc && cat && !isNaN(val)) {
-                        list[index] = {
-                            ...list[index],
-                            description: desc,
-                            category: cat,
-                            paymentMethod: paymentMethod,
-                            time: timeVal,
-                            value: val,
-                            type: dbData.categories[cat] || 'wants',
-                            recurrent: recurrent
-                        };
-                        saveDB();
-                        editModal.classList.add('hidden');
-                        updateDashboard();
+                }
+
+                if (itemFound && desc && cat && !isNaN(val)) {
+                    itemFound.description = desc;
+                    itemFound.category = cat;
+                    itemFound.date = dateVal;
+                    itemFound.time = timeVal;
+                    itemFound.value = val;
+                    if (typeItem === 'expense') {
+                        itemFound.paymentMethod = document.getElementById('editPaymentMethodInput').value;
+                        itemFound.type = dbData.categories[cat] || 'wants';
+                        itemFound.recurrent = document.getElementById('editRecurrentCheck').checked;
                     }
+
+                    const targetMonth = dateVal.slice(0, 7);
+                    ensureMonthExists(targetMonth);
+                    if (typeItem === 'gain') {
+                        dbData.months[targetMonth].gains.push(itemFound);
+                    } else {
+                        dbData.months[targetMonth].expenses.push(itemFound);
+                    }
+
+                    saveDB();
+                    editModal.classList.add('hidden');
+                    updateDashboard();
                 }
             });
 
