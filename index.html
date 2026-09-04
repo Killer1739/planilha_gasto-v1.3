@@ -241,9 +241,16 @@
                     </div>
                 </div>
 
+                <!-- Tornar Despesa Fixa -->
                 <div class="flex items-center gap-2 pt-1" id="recurrentWrapper">
                     <input type="checkbox" id="recurrentCheck" class="rounded border-slate-300 text-indigo-600 dark:bg-slate-900 dark:border-slate-700">
                     <label for="recurrentCheck" class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-400 select-none">Tornar despesa fixa (repetir nos próximos meses)</label>
+                </div>
+
+                <!-- Busca Rápida (Logo abaixo de despesa fixa) -->
+                <div class="flex items-center gap-2 mt-2 pt-2 border-t border-slate-200/60 dark:border-slate-700/60">
+                    <span class="text-xs">🔍</span>
+                    <input type="text" id="searchInput" placeholder="Buscar lançamento..." class="w-full sm:w-64 px-2.5 py-1 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg outline-none text-xs text-slate-800 dark:text-white">
                 </div>
             </form>
 
@@ -498,6 +505,7 @@
         const addExpenseForm = document.getElementById('addExpenseForm');
         const timeInput = document.getElementById('timeInput');
         const dateInput = document.getElementById('dateInput');
+        const searchInput = document.getElementById('searchInput');
         const emptyStateMsg = document.getElementById('emptyStateMsg');
         
         const totalExpensesDisplay = document.getElementById('totalExpensesDisplay');
@@ -597,6 +605,11 @@
                 setDefaultDateForCurrentMonth();
                 ensureMonthExists(currentMonth);
                 updateDashboard();
+            });
+
+            // Evento para busca em tempo real
+            searchInput.addEventListener('input', () => {
+                renderTransactionsList();
             });
 
             document.getElementById('prevMonthBtn').addEventListener('click', () => changeMonthOffset(-1));
@@ -998,9 +1011,20 @@
             
             const allItems = [...expenses, ...gains].sort((a, b) => b.createdAt - a.createdAt);
 
-            document.getElementById('totalItemsCount').textContent = `${allItems.length} item${allItems.length !== 1 ? 's' : ''}`;
+            // Filtragem por busca rápida
+            const query = searchInput.value.toLowerCase().trim();
+            const filteredItems = allItems.filter(item => {
+                if (!query) return true;
+                const desc = (item.description || '').toLowerCase();
+                const cat = (item.category || '').toLowerCase();
+                const pay = (item.paymentMethod || '').toLowerCase();
+                const valStr = String(item.value || '');
+                return desc.includes(query) || cat.includes(query) || pay.includes(query) || valStr.includes(query);
+            });
+
+            document.getElementById('totalItemsCount').textContent = `${filteredItems.length} item${filteredItems.length !== 1 ? 's' : ''}`;
             
-            if (allItems.length === 0) {
+            if (filteredItems.length === 0) {
                 emptyStateMsg.style.display = 'block';
                 expensesList.querySelectorAll('.expense-item').forEach(el => el.remove());
                 return;
@@ -1009,7 +1033,7 @@
             emptyStateMsg.style.display = 'none';
             expensesList.querySelectorAll('.expense-item').forEach(el => el.remove());
 
-            allItems.forEach(item => {
+            filteredItems.forEach(item => {
                 const li = document.createElement('li');
                 li.className = 'expense-item flex justify-between items-center p-2.5 sm:p-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-xl border border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition-colors';
                 
@@ -1273,7 +1297,6 @@
             const tbody = document.getElementById('historyTableBody');
             tbody.innerHTML = '';
 
-            // Filtra apenas meses que possuem lançamentos (despesas ou ganhos)
             const sortedMonths = Object.keys(dbData.months).filter(mStr => {
                 const m = dbData.months[mStr];
                 const hasExpenses = m.expenses && m.expenses.length > 0;
