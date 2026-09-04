@@ -281,9 +281,9 @@
                 </ul>
             </div>
 
-            <!-- Visualização 2: Raio-X com Caixa de Soma Total -->
+            <!-- Visualização 2: Raio-X Dinâmico (Cartões para Despesas / Total Geral para Ganhos) -->
             <div id="raioXView" class="hidden space-y-3 py-2">
-                <div class="grid grid-cols-1 gap-3" id="raioXCardsContainer">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="raioXCardsContainer">
                     <!-- Preenchido via JS dinamicamente -->
                 </div>
             </div>
@@ -1183,29 +1183,76 @@
 
             const m = dbData.months[currentMonth];
             const isGainActive = activeTab === 'gain';
-            const items = isGainActive ? (m.gains || []) : (m.expenses || []);
-            
-            let totalSum = 0;
-            items.forEach(item => {
-                totalSum += item.value;
-            });
 
-            const title = isGainActive ? 'Total de Ganhos no Período' : 'Total de Despesas no Período';
-            const icon = isGainActive ? 'fa-wallet text-emerald-500' : 'fa-arrow-trend-up text-rose-500';
-            const bg = isGainActive ? 'bg-emerald-100 dark:bg-emerald-900/35' : 'bg-rose-100 dark:bg-rose-900/35';
-            const textColor = isGainActive ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
+            if (isGainActive) {
+                // Caixa de Soma Total para Ganhos
+                container.className = 'grid grid-cols-1 gap-3';
+                const gains = m.gains || [];
+                let totalSum = 0;
+                gains.forEach(g => { totalSum += g.value; });
 
-            const card = document.createElement('div');
-            card.className = 'p-6 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50 flex flex-col items-center justify-center text-center';
-            card.innerHTML = `
-                <div class="w-12 h-12 rounded-full ${bg} flex items-center justify-center mb-3">
-                    <i class="fa-solid ${icon} text-xl"></i>
-                </div>
-                <h3 class="font-semibold text-xs sm:text-sm text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">${title}</h3>
-                <span class="text-2xl sm:text-3xl font-bold ${textColor}">${formatCurrency(totalSum)}</span>
-                <p class="text-xs text-slate-400 mt-2">${items.length} ite${items.length !== 1 ? 'ns' : 'm'} registrado${items.length !== 1 ? 's' : ''}</p>
-            `;
-            container.appendChild(card);
+                const card = document.createElement('div');
+                card.className = 'p-6 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50 flex flex-col items-center justify-center text-center';
+                card.innerHTML = `
+                    <div class="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/35 flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-wallet text-emerald-500 text-xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-xs sm:text-sm text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Total de Ganhos no Período</h3>
+                    <span class="text-2xl sm:text-3xl font-bold text-emerald-600 dark:text-emerald-400">${formatCurrency(totalSum)}</span>
+                    <p class="text-xs text-slate-400 mt-2">${gains.length} ite${gains.length !== 1 ? 'ns' : 'm'} registrado${gains.length !== 1 ? 's' : ''}</p>
+                `;
+                container.appendChild(card);
+            } else {
+                // Detalhamento por Forma de Pagamento para Despesas
+                container.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3';
+                const expenses = m.expenses || [];
+                
+                const totals = {
+                    'Pix': { label: '💠 Pix', total: 0, count: 0, icon: 'fa-bolt', color: 'text-teal-500', bg: 'bg-teal-100 dark:bg-teal-900/35' },
+                    'Cartão de Crédito': { label: '💳 Crédito', total: 0, count: 0, icon: 'fa-credit-card', color: 'text-violet-500', bg: 'bg-violet-100 dark:bg-violet-900/35' },
+                    'Débito': { label: '💳 Débito', total: 0, count: 0, icon: 'fa-wallet', color: 'text-blue-500', bg: 'bg-blue-100 dark:bg-blue-900/35' },
+                    'Dinheiro': { label: '💵 Dinheiro', total: 0, count: 0, icon: 'fa-money-bill-wave', color: 'text-emerald-500', bg: 'bg-emerald-100 dark:bg-emerald-900/35' }
+                };
+
+                let totalExpensesSum = 0;
+                expenses.forEach(e => {
+                    const method = e.paymentMethod || 'Pix';
+                    if (totals[method]) {
+                        totals[method].total += e.value;
+                        totals[method].count += 1;
+                        totalExpensesSum += e.value;
+                    }
+                });
+
+                for (let method in totals) {
+                    const data = totals[method];
+                    const pct = totalExpensesSum > 0 ? ((data.total / totalExpensesSum) * 100).toFixed(1) : 0;
+
+                    const card = document.createElement('div');
+                    card.className = 'p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50 flex flex-col justify-between';
+                    card.innerHTML = `
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 rounded-lg ${data.bg} flex items-center justify-center shrink-0">
+                                    <i class="fa-solid ${data.icon} ${data.color} text-sm"></i>
+                                </div>
+                                <span class="font-semibold text-xs sm:text-sm text-slate-800 dark:text-white">${data.label}</span>
+                            </div>
+                            <span class="text-[11px] font-medium text-slate-500">${data.count} ite${data.count !== 1 ? 'ns' : 'm'}</span>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-baseline mb-1">
+                                <span class="text-sm sm:text-base font-bold text-rose-600 dark:text-rose-400">${formatCurrency(data.total)}</span>
+                                <span class="text-xs font-semibold text-slate-500">${pct}% dos gastos</span>
+                            </div>
+                            <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden">
+                                <div class="bg-indigo-600 h-1.5 rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                }
+            }
         }
 
         function updateKPIs(stats) {
