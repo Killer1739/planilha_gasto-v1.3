@@ -874,7 +874,6 @@
                 let foundMonth = null;
                 let targetItem = null;
 
-                // Localiza o mês e o item que está sendo removido
                 for (let mStr in dbData.months) {
                     if (typeItem === 'gain') {
                         const found = (dbData.months[mStr].gains || []).find(g => g.id === id);
@@ -889,10 +888,8 @@
                     if (typeItem === 'gain') {
                         dbData.months[foundMonth].gains = dbData.months[foundMonth].gains.filter(g => g.id !== id);
                     } else {
-                        // Remove do mês atual
                         dbData.months[foundMonth].expenses = dbData.months[foundMonth].expenses.filter(e => e.id !== id);
 
-                        // Se for despesa fixa, interrompe e apaga de TODOS OS MESES FUTUROS (mStr > foundMonth)
                         if (targetItem.recurrent) {
                             const recId = targetItem.recurrenceId || targetItem.id;
                             const desc = targetItem.description;
@@ -1276,7 +1273,14 @@
             const tbody = document.getElementById('historyTableBody');
             tbody.innerHTML = '';
 
-            const sortedMonths = Object.keys(dbData.months).sort().reverse();
+            // Filtra apenas meses que possuem lançamentos (despesas ou ganhos)
+            const sortedMonths = Object.keys(dbData.months).filter(mStr => {
+                const m = dbData.months[mStr];
+                const hasExpenses = m.expenses && m.expenses.length > 0;
+                const hasGains = m.gains && m.gains.length > 0;
+                return hasExpenses || hasGains;
+            }).sort().reverse();
+
             if (sortedMonths.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-slate-400">Nenhum dado histórico registrado.</td></tr>`;
                 return;
@@ -1387,7 +1391,6 @@
                 const finalTime = timeVal.length === 5 ? timeVal + ':00' : timeVal;
                 const val = parseFloat(document.getElementById('editValInput').value);
 
-                // Remover o item de onde quer que ele esteja e recolocar na data certa
                 let itemFound = null;
                 for (let mStr in dbData.months) {
                     if (typeItem === 'gain') {
