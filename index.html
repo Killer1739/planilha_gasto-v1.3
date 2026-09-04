@@ -159,21 +159,18 @@
                 </div>
             </div>
 
+            <!-- Card Status com Emojis Dinâmicos & 50/30/20 em Vermelho Neon -->
             <div class="glass-effect rounded-2xl shadow-sm p-3 sm:p-5 flex flex-col justify-between border-l-4 border-indigo-500">
                 <div class="flex justify-between items-start">
                     <h3 class="text-[10px] sm:text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</h3>
                     <div class="p-1.5 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg text-indigo-600 text-xs">
-                        <i class="fa-solid fa-scale-balanced"></i>
+                        <span id="statusEmojiIcon" class="text-xs sm:text-sm">🎯</span>
                     </div>
                 </div>
-                <div class="mt-2 flex items-center gap-1.5 sm:gap-2">
-                    <div id="budgetStatusIcon" class="h-6 w-6 sm:h-8 sm:w-8 rounded-full flex items-center justify-center text-white bg-slate-300 text-xs shrink-0">
-                        <i class="fa-solid fa-minus text-xs"></i>
-                    </div>
-                    <div class="overflow-hidden">
-                        <span class="text-xs sm:text-sm font-bold text-slate-800 dark:text-white block truncate" id="budgetStatusText">Aguardando</span>
-                        <p class="text-[9px] sm:text-[10px] text-slate-500 truncate">50/30/20</p>
-                    </div>
+                <div class="mt-2 overflow-hidden">
+                    <span class="text-xs sm:text-sm font-bold text-slate-800 dark:text-white block truncate" id="budgetStatusText">Aguardando</span>
+                    <p class="text-[10px] text-slate-500 truncate mt-0.5" id="budgetStatusSub">Iniciando ciclo</p>
+                    <p class="text-[9px] text-rose-500 font-bold uppercase tracking-wider mt-1 drop-shadow-[0_0_8px_rgba(244,63,94,0.6)]">50/30/20</p>
                 </div>
             </div>
         </section>
@@ -575,8 +572,9 @@
         const wantsIdeal = document.getElementById('wantsIdeal');
         const savingsIdeal = document.getElementById('savingsIdeal');
 
-        const budgetStatusIcon = document.getElementById('budgetStatusIcon');
+        const statusEmojiIcon = document.getElementById('statusEmojiIcon');
         const budgetStatusText = document.getElementById('budgetStatusText');
+        const budgetStatusSub = document.getElementById('budgetStatusSub');
         const recommendationsContainer = document.getElementById('recommendationsContainer');
 
         const formatCurrency = (val) => {
@@ -1072,6 +1070,7 @@
             const stats = calculateStats();
             updateKPIs(stats);
             update503020(stats);
+            updateDynamicStatus(stats);
             updateChart(stats.byCategory);
             updateSavingsChart(stats);
             updateTimelineChart(dbData.months[currentMonth].expenses);
@@ -1268,6 +1267,52 @@
             savingsPercentDisplay.textContent = `${savPct}%`;
         }
 
+        function updateDynamicStatus(stats) {
+            const m = dbData.months[currentMonth];
+            const totalExp = (m.expenses || []).length;
+            const income = stats.income;
+            const total = stats.total;
+            const expRatio = income > 0 ? total / income : 0;
+            
+            const today = new Date();
+            const isCurrentMonthActive = currentMonth === today.toISOString().slice(0, 7);
+            const dayOfMonth = isCurrentMonthActive ? today.getDate() : 15;
+
+            let emoji = '☕';
+            let mainText = 'Aguardando';
+            let subText = 'Café na mesa, inicie!';
+
+            if (totalExp === 0) {
+                emoji = '☕';
+                mainText = 'Aguardando';
+                subText = 'Café na mesa, inicie!';
+            } else if (total > income) {
+                emoji = '🚨';
+                mainText = 'Estourado';
+                subText = 'Alerta vermelho no caixa!';
+            } else if (expRatio > 0.85) {
+                emoji = '👀';
+                mainText = 'Atenção';
+                subText = 'Ritmo acelerado, freia!';
+            } else if (dayOfMonth >= 15 && expRatio < 0.45) {
+                emoji = '🚀';
+                mainText = 'Voando Alto';
+                subText = 'Caixa blindado e livre!';
+            } else if (dayOfMonth >= 20 && expRatio < 0.7) {
+                emoji = '💎';
+                mainText = 'Diamante';
+                subText = 'Gestão impecável!';
+            } else {
+                emoji = '🎯';
+                mainText = 'Na Rota';
+                subText = 'Controle equilibrado';
+            }
+
+            if (statusEmojiIcon) statusEmojiIcon.textContent = emoji;
+            if (budgetStatusText) budgetStatusText.textContent = mainText;
+            if (budgetStatusSub) budgetStatusSub.textContent = subText;
+        }
+
         function update503020(stats) {
             const income = stats.income;
             const needsPct = income > 0 ? (stats.needsTotal / income) * 100 : 0;
@@ -1289,18 +1334,6 @@
             needsBar.style.width = `${Math.min(needsPct, 100)}%`;
             wantsBar.style.width = `${Math.min(wantsPct, 100)}%`;
             savingBar.style.width = `${Math.max(Math.min(savingsPct, 100), 0)}%`;
-
-            const totalExp = dbData.months[currentMonth].expenses.length;
-            if (totalExp === 0) {
-                budgetStatusText.textContent = "Aguardando";
-                budgetStatusIcon.className = "h-6 w-6 sm:h-8 sm:w-8 rounded-full flex items-center justify-center text-white bg-slate-300 text-xs shrink-0";
-            } else if (stats.total > income) {
-                budgetStatusText.textContent = "Estourado";
-                budgetStatusIcon.className = "h-6 w-6 sm:h-8 sm:w-8 rounded-full flex items-center justify-center text-white bg-rose-500 text-xs shrink-0";
-            } else {
-                budgetStatusText.textContent = "Em dia";
-                budgetStatusIcon.className = "h-6 w-6 sm:h-8 sm:w-8 rounded-full flex items-center justify-center text-white bg-emerald-500 text-xs shrink-0";
-            }
         }
 
         function updateChart(dataByCategory) {
