@@ -213,7 +213,7 @@
                         </div>
                     </div>
 
-                    <!-- Coluna Direita: Categoria, Pagamento com Emojis, Valor e Botão -->
+                    <!-- Coluna Direita: Categoria com Emojis, Pagamento, Valor e Botão -->
                     <div class="sm:col-span-8 grid grid-cols-1 sm:grid-cols-12 gap-2 items-center">
                         <div class="sm:col-span-4">
                             <div class="flex gap-1.5">
@@ -432,8 +432,8 @@
                     <label class="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Forma de Pagamento</label>
                     <select id="editPaymentMethodInput" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
                         <option value="Pix">💠 Pix</option>
-                        <option value="Cartão de Crédito">🖤💳 Cartão Crédito</option>
-                        <option value="Débito">💛💳 Débito</option>
+                        <option value="Cartão de Crédito">💳 Crédito</option>
+                        <option value="Débito">💳 Débito</option>
                         <option value="Dinheiro">💵 Dinheiro</option>
                     </select>
                 </div>
@@ -522,9 +522,22 @@
 
         const paymentIcons = {
             'Pix': '💠 Pix',
-            'Cartão de Crédito': '🖤💳 Cartão de Crédito',
-            'Débito': '💛💳 Débito',
+            'Cartão de Crédito': '💳 Cartão de Crédito',
+            'Débito': '💳 Débito',
             'Dinheiro': '💵 Dinheiro'
+        };
+
+        const categoryIcons = {
+            'Moradia': '🏡',
+            'Alimentação': '🍔',
+            'Transporte': '🚀',
+            'Saúde': '🩺',
+            'Lazer': '🎮',
+            'Compras': '🛍️',
+            'Dívidas': '💳',
+            'Outros': '📦',
+            'Vendas': '💰',
+            'Ganho Extra': '💵'
         };
 
         const currentMonthInput = document.getElementById('currentMonthInput');
@@ -837,7 +850,8 @@
             for (let cat in dbData.categories) {
                 const opt = document.createElement('option');
                 opt.value = cat;
-                opt.textContent = `${cat} (${dbData.categories[cat] === 'needs' ? 'Essencial' : dbData.categories[cat] === 'wants' ? 'Desejo' : 'Poupança/Dívida'})`;
+                const icon = categoryIcons[cat] || '📁';
+                opt.textContent = `${icon} ${cat} (${dbData.categories[cat] === 'needs' ? 'Essencial' : dbData.categories[cat] === 'wants' ? 'Desejo' : 'Poupança/Dívida'})`;
                 selectElement.appendChild(opt);
             }
 
@@ -846,7 +860,8 @@
             for (let cat in dbData.categories) {
                 const opt = document.createElement('option');
                 opt.value = cat;
-                opt.textContent = cat;
+                const icon = categoryIcons[cat] || '📁';
+                opt.textContent = `${icon} ${cat}`;
                 editSelect.appendChild(opt);
             }
         }
@@ -854,10 +869,13 @@
         function setupGainCategorySelect() {
             const selectElement = document.getElementById('categoryInput');
             selectElement.innerHTML = '<option value="" disabled selected>Categoria...</option>';
-            ['Vendas', 'Ganho Extra'].forEach(cat => {
+            [
+                {name: 'Vendas', icon: '💰'},
+                {name: 'Ganho Extra', icon: '💵'}
+            ].forEach(cat => {
                 const opt = document.createElement('option');
-                opt.value = cat;
-                opt.textContent = cat;
+                opt.value = cat.name;
+                opt.textContent = `${cat.icon} ${cat.name}`;
                 selectElement.appendChild(opt);
             });
         }
@@ -1011,7 +1029,7 @@
 
             const editCat = document.getElementById('editCategoryInput');
             if (foundType === 'gain') {
-                editCat.innerHTML = '<option value="Vendas">Vendas</option><option value="Ganho Extra">Ganho Extra</option>';
+                editCat.innerHTML = '<option value="Vendas">💰 Vendas</option><option value="Ganho Extra">💵 Ganho Extra</option>';
                 document.getElementById('editPaymentWrapper').style.display = 'none';
                 document.getElementById('editRecurrentWrapper').style.display = 'none';
             } else {
@@ -1111,7 +1129,9 @@
                 let dateFormatted = item.date ? item.date.split('-').reverse().join('/') : '';
                 let timeStr = item.time ? ` • 🕒 ${item.time.slice(0, 5)}` : '';
                 let dateTimeStr = dateFormatted ? `📅 ${dateFormatted}${timeStr}` : timeStr;
-                let subtitle = `${item.category} (Ganho) • ${dateTimeStr}`;
+                
+                const catIcon = categoryIcons[item.category] || '📁';
+                let subtitle = `${catIcon} ${item.category} (Ganho) • ${dateTimeStr}`;
 
                 if (item.typeItem === 'expense') {
                     sign = '- ';
@@ -1121,7 +1141,7 @@
                     if(item.type === 'savings') iconClass = 'fa-credit-card text-emerald-500';
                     
                     const payMethodDisplay = paymentIcons[item.paymentMethod] || `💠 ${item.paymentMethod || 'Pix'}`;
-                    subtitle = `${item.category} • <span class="font-medium text-slate-600 dark:text-slate-300">${payMethodDisplay}</span> • ${dateTimeStr}`;
+                    subtitle = `${catIcon} ${item.category} • <span class="font-medium text-slate-600 dark:text-slate-300">${payMethodDisplay}</span> • ${dateTimeStr}`;
                 }
 
                 li.innerHTML = `
@@ -1158,8 +1178,8 @@
             
             const totals = {
                 'Pix': { label: '💠 Pix', total: 0, count: 0, icon: 'fa-bolt', color: 'text-teal-500', bg: 'bg-teal-100 dark:bg-teal-900/35' },
-                'Cartão de Crédito': { label: '🖤💳 Cartão de Crédito', total: 0, count: 0, icon: 'fa-credit-card', color: 'text-violet-500', bg: 'bg-violet-100 dark:bg-violet-900/35' },
-                'Débito': { label: '💛💳 Débito', total: 0, count: 0, icon: 'fa-wallet', color: 'text-blue-500', bg: 'bg-blue-100 dark:bg-blue-900/35' },
+                'Cartão de Crédito': { label: '💳 Crédito', total: 0, count: 0, icon: 'fa-credit-card', color: 'text-violet-500', bg: 'bg-violet-100 dark:bg-violet-900/35' },
+                'Débito': { label: '💳 Débito', total: 0, count: 0, icon: 'fa-wallet', color: 'text-blue-500', bg: 'bg-blue-100 dark:bg-blue-900/35' },
                 'Dinheiro': { label: '💵 Dinheiro', total: 0, count: 0, icon: 'fa-money-bill-wave', color: 'text-emerald-500', bg: 'bg-emerald-100 dark:bg-emerald-900/35' }
             };
 
