@@ -175,7 +175,7 @@
             </div>
         </section>
 
-        <!-- 1. LANÇAMENTOS (Com Data e Horário Bem Compactos) -->
+        <!-- 1. LANÇAMENTOS (Com Data e Horário Bem Curtinhos e Sem Sobreposição) -->
         <section class="glass-effect rounded-2xl shadow-sm p-4 sm:p-6">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
@@ -192,13 +192,13 @@
 
             <form id="addExpenseForm" class="space-y-3 mb-4 bg-slate-50 dark:bg-slate-800/50 p-3 sm:p-4 rounded-xl border border-slate-200 dark:border-slate-700">
                 <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-3 items-start">
-                    <!-- Coluna Esquerda: Descrição em cima, Data e Horário Compactos logo abaixo -->
+                    <!-- Coluna Esquerda: Descrição em cima, Data e Horário Curtinhos logo abaixo -->
                     <div class="sm:col-span-4 space-y-1.5">
                         <input type="text" id="descInput" required placeholder="Ex: Supermercado" class="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
                         
-                        <div class="grid grid-cols-2 gap-1">
+                        <div class="grid grid-cols-2 gap-1.5">
                             <input type="date" id="dateInput" required title="Data do Lançamento" class="w-full px-1 py-1 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg outline-none text-[10px] text-slate-800 dark:text-white cursor-pointer">
-                            <input type="time" step="1" id="timeInput" required title="Horário do Lançamento" class="w-full px-1 py-1 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg outline-none text-[10px] text-slate-800 dark:text-white cursor-pointer text-center">
+                            <input type="time" id="timeInput" required title="Horário do Lançamento" class="w-full px-1 py-1 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg outline-none text-[10px] text-slate-800 dark:text-white cursor-pointer text-center">
                         </div>
                     </div>
 
@@ -418,7 +418,7 @@
                     </div>
                     <div>
                         <label class="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Horário</label>
-                        <input type="time" step="1" id="editTimeInput" required class="w-full px-2 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg outline-none text-xs text-slate-800 dark:text-white">
+                        <input type="time" id="editTimeInput" required class="w-full px-2 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg outline-none text-xs text-slate-800 dark:text-white">
                     </div>
                 </div>
                 <div>
@@ -581,14 +581,14 @@
             setDefaultDateForCurrentMonth();
             ensureMonthExists(currentMonth);
 
-            // Relógio automático ao vivo no campo de horário
+            // Relógio automático ao vivo no campo de horário (HH:MM compacto)
             timeInput.addEventListener('focus', () => { isTimeInputFocused = true; });
             timeInput.addEventListener('blur', () => { if(!timeInput.value) isTimeInputFocused = false; });
 
             setInterval(() => {
                 if (!isTimeInputFocused) {
                     const now = new Date();
-                    timeInput.value = now.toTimeString().slice(0, 8);
+                    timeInput.value = now.toTimeString().slice(0, 5);
                 }
             }, 1000);
 
@@ -790,7 +790,7 @@
             const cat = document.getElementById('categoryInput').value;
             const paymentMethod = document.getElementById('paymentMethodInput').value;
             const dateVal = dateInput.value || `${currentMonth}-01`;
-            const timeVal = timeInput.value || new Date().toTimeString().slice(0, 8);
+            const timeVal = timeInput.value ? (timeInput.value.length === 5 ? timeInput.value + ':00' : timeInput.value) : '00:00:00';
             const val = parseFloat(document.getElementById('valInput').value);
             const recurrent = document.getElementById('recurrentCheck').checked;
 
@@ -830,7 +830,7 @@
             const desc = document.getElementById('descInput').value.trim();
             const cat = document.getElementById('categoryInput').value;
             const dateVal = dateInput.value || `${currentMonth}-01`;
-            const timeVal = timeInput.value || new Date().toTimeString().slice(0, 8);
+            const timeVal = timeInput.value ? (timeInput.value.length === 5 ? timeInput.value + ':00' : timeInput.value) : '00:00:00';
             const val = parseFloat(document.getElementById('valInput').value);
 
             if (!desc || !cat || isNaN(val) || val <= 0) return;
@@ -898,7 +898,7 @@
             document.getElementById('editDescInput').value = foundItem.description;
             document.getElementById('editValInput').value = foundItem.value;
             document.getElementById('editDateInput').value = foundItem.date || `${currentMonth}-01`;
-            document.getElementById('editTimeInput').value = foundItem.time || '00:00:00';
+            document.getElementById('editTimeInput').value = foundItem.time ? foundItem.time.slice(0, 5) : '00:00';
 
             const editCat = document.getElementById('editCategoryInput');
             if (foundType === 'gain') {
@@ -1351,6 +1351,7 @@
                 const cat = document.getElementById('editCategoryInput').value;
                 const dateVal = document.getElementById('editDateInput').value;
                 const timeVal = document.getElementById('editTimeInput').value;
+                const finalTime = timeVal.length === 5 ? timeVal + ':00' : timeVal;
                 const val = parseFloat(document.getElementById('editValInput').value);
 
                 // Remover o item de onde quer que ele esteja e recolocar na data certa
@@ -1375,7 +1376,7 @@
                     itemFound.description = desc;
                     itemFound.category = cat;
                     itemFound.date = dateVal;
-                    itemFound.time = timeVal;
+                    itemFound.time = finalTime;
                     itemFound.value = val;
                     if (typeItem === 'expense') {
                         itemFound.paymentMethod = document.getElementById('editPaymentMethodInput').value;
