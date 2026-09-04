@@ -792,6 +792,29 @@
                 if (!dbData.months[monthStr].gains) {
                     dbData.months[monthStr].gains = [];
                 }
+                
+                // Sincronizar despesas fixas do mês anterior automaticamente
+                const sortedMonths = Object.keys(dbData.months).sort();
+                const idx = sortedMonths.indexOf(monthStr);
+                if (idx > 0) {
+                    const prevMonthStr = sortedMonths[idx - 1];
+                    const prevRecurrent = (dbData.months[prevMonthStr].expenses || []).filter(exp => exp.recurrent);
+                    
+                    prevRecurrent.forEach(prevExp => {
+                        const recId = prevExp.recurrenceId || prevExp.id;
+                        const exists = (dbData.months[monthStr].expenses || []).some(e => (e.recurrenceId === recId) || (e.recurrent && e.description === prevExp.description && e.category === prevExp.category));
+                        if (!exists) {
+                            dbData.months[monthStr].expenses.push({
+                                ...prevExp,
+                                id: generateId(),
+                                recurrenceId: recId,
+                                date: `${monthStr}-01`,
+                                createdAt: Date.now()
+                            });
+                        }
+                    });
+                    saveDB();
+                }
             }
         }
 
@@ -1506,7 +1529,11 @@
             const tbody = document.getElementById('historyTableBody');
             tbody.innerHTML = '';
 
+            const realCurrentMonth = new Date().toISOString().slice(0, 7);
+
             const sortedMonths = Object.keys(dbData.months).filter(mStr => {
+                // Oculta meses futuros do histórico comparativo para não poluir
+                if (mStr > realCurrentMonth) return false;
                 const m = dbData.months[mStr];
                 const hasExpenses = m.expenses && m.expenses.length > 0;
                 const hasGains = m.gains && m.gains.length > 0;
