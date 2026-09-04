@@ -668,7 +668,13 @@
                     
                     recurrentExpenses = (dbData.months[lastMonth].expenses || [])
                         .filter(exp => exp.recurrent)
-                        .map(exp => ({ ...exp, id: generateId(), date: `${monthStr}-01`, createdAt: Date.now() }));
+                        .map(exp => ({ 
+                            ...exp, 
+                            id: generateId(), 
+                            recurrenceId: exp.recurrenceId || exp.id,
+                            date: `${monthStr}-01`, 
+                            createdAt: Date.now() 
+                        }));
                 }
 
                 dbData.months[monthStr] = {
@@ -801,6 +807,7 @@
 
             const expense = {
                 id: generateId(),
+                recurrenceId: recurrent ? generateId() : null,
                 typeItem: 'expense',
                 description: desc,
                 category: cat,
@@ -864,21 +871,47 @@
 
         window.removeItem = function(id, typeItem) {
             if (confirm("Tem certeza que deseja remover este lançamento?")) {
-                let found = false;
+                let foundMonth = null;
+                let targetItem = null;
+
+                // Localiza o mês e o item que está sendo removido
                 for (let mStr in dbData.months) {
                     if (typeItem === 'gain') {
-                        const len = dbData.months[mStr].gains.length;
-                        dbData.months[mStr].gains = dbData.months[mStr].gains.filter(g => g.id !== id);
-                        if (dbData.months[mStr].gains.length < len) found = true;
+                        const found = (dbData.months[mStr].gains || []).find(g => g.id === id);
+                        if (found) { foundMonth = mStr; targetItem = found; break; }
                     } else {
-                        const len = dbData.months[mStr].expenses.length;
-                        dbData.months[mStr].expenses = dbData.months[mStr].expenses.filter(e => e.id !== id);
-                        if (dbData.months[mStr].expenses.length < len) found = true;
+                        const found = (dbData.months[mStr].expenses || []).find(e => e.id === id);
+                        if (found) { foundMonth = mStr; targetItem = found; break; }
                     }
-                    if (found) break;
                 }
-                saveDB();
-                updateDashboard();
+
+                if (targetItem) {
+                    if (typeItem === 'gain') {
+                        dbData.months[foundMonth].gains = dbData.months[foundMonth].gains.filter(g => g.id !== id);
+                    } else {
+                        // Remove do mês atual
+                        dbData.months[foundMonth].expenses = dbData.months[foundMonth].expenses.filter(e => e.id !== id);
+
+                        // Se for despesa fixa, interrompe e apaga de TODOS OS MESES FUTUROS (mStr > foundMonth)
+                        if (targetItem.recurrent) {
+                            const recId = targetItem.recurrenceId || targetItem.id;
+                            const desc = targetItem.description;
+                            const cat = targetItem.category;
+
+                            for (let mStr in dbData.months) {
+                                if (mStr > foundMonth) {
+                                    dbData.months[mStr].expenses = dbData.months[mStr].expenses.filter(e => {
+                                        const matchesRecId = recId && e.recurrenceId === recId;
+                                        const matchesDetails = e.recurrent && e.description === desc && e.category === cat;
+                                        return !(matchesRecId || matchesDetails);
+                                    });
+                                }
+                            }
+                        }
+                    }
+                    saveDB();
+                    updateDashboard();
+                }
             }
         }
 
