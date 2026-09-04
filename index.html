@@ -213,7 +213,7 @@
                         </div>
                     </div>
 
-                    <!-- Coluna Direita: Categoria, Pagamento, Valor e Botão -->
+                    <!-- Coluna Direita: Categoria, Pagamento com Emojis, Valor e Botão -->
                     <div class="sm:col-span-8 grid grid-cols-1 sm:grid-cols-12 gap-2 items-center">
                         <div class="sm:col-span-4">
                             <div class="flex gap-1.5">
@@ -228,10 +228,10 @@
 
                         <div class="sm:col-span-3" id="paymentMethodWrapper">
                             <select id="paymentMethodInput" required class="w-full px-2.5 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg outline-none text-xs text-slate-800 dark:text-white">
-                                <option value="Pix">Pix</option>
-                                <option value="Cartão de Crédito">Cartão Crédito</option>
-                                <option value="Débito">Débito</option>
-                                <option value="Dinheiro">Dinheiro</option>
+                                <option value="Pix">💠 Pix</option>
+                                <option value="Cartão de Crédito">🖤💳 Cartão Crédito</option>
+                                <option value="Débito">💛💳 Débito</option>
+                                <option value="Dinheiro">💵 Dinheiro</option>
                             </select>
                         </div>
 
@@ -431,10 +431,10 @@
                 <div id="editPaymentWrapper">
                     <label class="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Forma de Pagamento</label>
                     <select id="editPaymentMethodInput" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg outline-none text-xs sm:text-sm text-slate-800 dark:text-white">
-                        <option value="Pix">Pix</option>
-                        <option value="Cartão de Crédito">Cartão Crédito</option>
-                        <option value="Débito">Débito</option>
-                        <option value="Dinheiro">Dinheiro</option>
+                        <option value="Pix">💠 Pix</option>
+                        <option value="Cartão de Crédito">🖤💳 Cartão Crédito</option>
+                        <option value="Débito">💛💳 Débito</option>
+                        <option value="Dinheiro">💵 Dinheiro</option>
                     </select>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
@@ -519,6 +519,13 @@
         let timelineChartInstance = null;
         const colors = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899', '#f97316'];
         const savingsColors = ['#ef4444', '#10b981'];
+
+        const paymentIcons = {
+            'Pix': '💠 Pix',
+            'Cartão de Crédito': '🖤💳 Cartão de Crédito',
+            'Débito': '💛💳 Débito',
+            'Dinheiro': '💵 Dinheiro'
+        };
 
         const currentMonthInput = document.getElementById('currentMonthInput');
         const totalIncomeDisplay = document.getElementById('totalIncomeDisplay');
@@ -1112,7 +1119,9 @@
                     iconClass = 'fa-house text-blue-500';
                     if(item.type === 'wants') iconClass = 'fa-martini-glass-citrus text-amber-500';
                     if(item.type === 'savings') iconClass = 'fa-credit-card text-emerald-500';
-                    subtitle = `${item.category} • <span class="font-medium text-slate-600 dark:text-slate-300">${item.paymentMethod || 'Pix'}</span> • ${dateTimeStr}`;
+                    
+                    const payMethodDisplay = paymentIcons[item.paymentMethod] || `💠 ${item.paymentMethod || 'Pix'}`;
+                    subtitle = `${item.category} • <span class="font-medium text-slate-600 dark:text-slate-300">${payMethodDisplay}</span> • ${dateTimeStr}`;
                 }
 
                 li.innerHTML = `
@@ -1148,10 +1157,10 @@
             const expenses = m.expenses || [];
             
             const totals = {
-                'Pix': { total: 0, count: 0, icon: 'fa-bolt', color: 'text-teal-500', bg: 'bg-teal-100 dark:bg-teal-900/35' },
-                'Cartão de Crédito': { total: 0, count: 0, icon: 'fa-credit-card', color: 'text-violet-500', bg: 'bg-violet-100 dark:bg-violet-900/35' },
-                'Débito': { total: 0, count: 0, icon: 'fa-wallet', color: 'text-blue-500', bg: 'bg-blue-100 dark:bg-blue-900/35' },
-                'Dinheiro': { total: 0, count: 0, icon: 'fa-money-bill-wave', color: 'text-emerald-500', bg: 'bg-emerald-100 dark:bg-emerald-900/35' }
+                'Pix': { label: '💠 Pix', total: 0, count: 0, icon: 'fa-bolt', color: 'text-teal-500', bg: 'bg-teal-100 dark:bg-teal-900/35' },
+                'Cartão de Crédito': { label: '🖤💳 Cartão de Crédito', total: 0, count: 0, icon: 'fa-credit-card', color: 'text-violet-500', bg: 'bg-violet-100 dark:bg-violet-900/35' },
+                'Débito': { label: '💛💳 Débito', total: 0, count: 0, icon: 'fa-wallet', color: 'text-blue-500', bg: 'bg-blue-100 dark:bg-blue-900/35' },
+                'Dinheiro': { label: '💵 Dinheiro', total: 0, count: 0, icon: 'fa-money-bill-wave', color: 'text-emerald-500', bg: 'bg-emerald-100 dark:bg-emerald-900/35' }
             };
 
             let totalExpensesSum = 0;
@@ -1176,7 +1185,7 @@
                             <div class="w-8 h-8 rounded-lg ${data.bg} flex items-center justify-center shrink-0">
                                 <i class="fa-solid ${data.icon} ${data.color} text-sm"></i>
                             </div>
-                            <span class="font-semibold text-xs sm:text-sm text-slate-800 dark:text-white">${method}</span>
+                            <span class="font-semibold text-xs sm:text-sm text-slate-800 dark:text-white">${data.label}</span>
                         </div>
                         <span class="text-[11px] font-medium text-slate-500">${data.count} ite${data.count !== 1 ? 'ns' : 'm'}</span>
                     </div>
